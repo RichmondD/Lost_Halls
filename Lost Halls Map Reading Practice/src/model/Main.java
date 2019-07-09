@@ -1,3 +1,4 @@
+package model;
 //This class will manage the home screen and communicate with all other classes
 import java.awt.Color;
 import java.awt.Font;
@@ -9,6 +10,10 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import controller.Button;
+import controller.Keyboard;
+import controller.Mouse;
 
 public class Main{
 	
@@ -27,6 +32,7 @@ public class Main{
 		frame.setSize(960,988);
 		frame.setTitle("Map Reading Practice");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
 		
 		c1 = new JPanel();
 		frame.add(c1);
@@ -41,17 +47,17 @@ public class Main{
 		}
 		
 		try {
-			URL url1 = Main.class.getResource("Background Map.jpg");
+			URL url1 = Main.class.getResource("../resources/Background Map.jpg");
 		    Iback = ImageIO.read(url1);
 		} catch (IOException e) {
 		}
 		try {
-			URL url2 = Main.class.getResource("Pot.png");
+			URL url2 = Main.class.getResource("../resources/Pot.png");
 		    Ipot = ImageIO.read(url2);
 		} catch (IOException e) {
 		}
 		try {
-			URL url3 = Main.class.getResource("Defender.png");
+			URL url3 = Main.class.getResource("../resources/Defender.png");
 		    Idef = ImageIO.read(url3);
 		} catch (IOException e) {
 		}

@@ -1,5 +1,8 @@
+package controller;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
+import model.Main;
 
 public class Keyboard implements KeyListener {
 	
