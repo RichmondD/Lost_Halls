@@ -2,7 +2,7 @@ package controller;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import model.Main;
+import view.Paint;
 
 public class Keyboard implements KeyListener {
 	
@@ -14,16 +14,16 @@ public class Keyboard implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent k) {
 		if(k.getKeyCode() == KeyEvent.VK_UP) {
-			Main.moveUp();
+			Paint.moveUp();
 		}
 		else if(k.getKeyCode() == KeyEvent.VK_DOWN) {
-			Main.moveDown();
+			Paint.moveDown();
 		}
 		else if(k.getKeyCode() == KeyEvent.VK_RIGHT) {
-			Main.moveRight();
+			Paint.moveRight();
 		}
 		else if(k.getKeyCode() == KeyEvent.VK_LEFT) {
-			Main.moveLeft();
+			Paint.moveLeft();
 		}
 	}
 
