@@ -1,9 +1,6 @@
 package model;
 //This class is for executing draw statements in a ~60fps loop, for updating the current screen
 
-import controller.Button;
-import controller.Keyboard;
-import controller.Mouse;
 import view.Paint;
 
 public class Main{

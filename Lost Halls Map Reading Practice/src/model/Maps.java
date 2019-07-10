@@ -1,7 +1,6 @@
 package model;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -151,9 +150,9 @@ public class Maps {
 				pick = r.nextInt(len2);
 			}
 			used2[pick] = true;
-			for (int i = 0; i < a[pick].length; i++) {
-				for (int j = 0; j < a[pick][i].length; j++) {
-					int num = a[pick][i][j];
+			for (int i = 0; i < in[pick].length; i++) {
+				for (int j = 0; j < in[pick][i].length; j++) {
+					int num = in[pick][i][j];
 					Room r = convertRoom(num, i, j);
 					retMap[i][j] = r;
 				}
@@ -166,9 +165,9 @@ public class Maps {
 			}
 			pick = r.nextInt(len2);
 			used2[pick] = true;
-			for (int i = 0; i < a[pick].length; i++) {
-				for (int j = 0; j < a[pick][i].length; j++) {
-					int num = a[pick][i][j];
+			for (int i = 0; i < in[pick].length; i++) {
+				for (int j = 0; j < in[pick][i].length; j++) {
+					int num = in[pick][i][j];
 					Room r = convertRoom(num, i, j);
 					retMap[i][j] = r;
 				}
