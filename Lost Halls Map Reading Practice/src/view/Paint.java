@@ -25,7 +25,7 @@ public class Paint {
 	public static Maps map;
 	private static Keyboard key;
 	private static Window win;
-	private static Room[][] m;
+	private static Room[][] m = new Room[9][9];
 	public static int[] pos = {0,0};
 	private static int tutor;
 	public enum CurrentFrame {
@@ -55,19 +55,24 @@ public class Paint {
 		}
 		
 		try {
-			URL url1 = Main.class.getResource("../resources/Background Map.jpg");
+			URL url1 = Main.class.getResource("/resources/Background Map.jpg");
 		    Iback = ImageIO.read(url1);
 		} catch (IOException e) {
 		}
 		try {
-			URL url2 = Main.class.getResource("../resources/Pot.png");
+			URL url2 = Main.class.getResource("/resources/Pot.png");
 		    Ipot = ImageIO.read(url2);
 		} catch (IOException e) {
 		}
 		try {
-			URL url3 = Main.class.getResource("../resources/Defender.png");
+			URL url3 = Main.class.getResource("/resources/Defender.png");
 		    Idef = ImageIO.read(url3);
 		} catch (IOException e) {
+		}
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				m[i][j] = new Room();
+			}
 		}
 		paintHome();
 	}
@@ -325,7 +330,7 @@ public class Paint {
 			//System.out.println("Left");
 		}
 	}
-	public static void credit() {
+	public static void paintCredit() {
 		current = CurrentFrame.CREDITS;
 		Graphics g = c1.getGraphics();
 		g.setColor(Color.BLACK);
@@ -353,7 +358,7 @@ public class Paint {
 				paintHome();
 				break;
 			case CREDITS:
-				credit();
+				paintCredit();
 				break;
 			case CONTROLS:
 				paintControls();
@@ -372,6 +377,8 @@ public class Paint {
 					paintRoom(i, j, m[i][j]);
 			}
 		}
+		new Button(3, 100, 870, 236, 50, Color.GRAY, "Back to home", c1, mouse1);
+		new Button(1, 700, 870, 172, 50, Color.GRAY, "New Map", c1, mouse1);
 	}
 }
 

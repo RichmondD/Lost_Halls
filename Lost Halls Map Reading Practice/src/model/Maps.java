@@ -27,7 +27,7 @@ public class Maps {
 		r = new Random();
 		List<String> l = new ArrayList<String>();
 		
-		InputStream in = Maps.class.getResourceAsStream("../resources/Maps.txt");
+		InputStream in = Maps.class.getResourceAsStream("/resources/Maps.txt");
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		while(br.ready()) {
 			for (int i = 0; i < 9; i++) {
