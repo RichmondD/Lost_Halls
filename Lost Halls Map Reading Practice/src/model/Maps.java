@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import view.Paint;
+
 //this class will store, read, and provide random maps to Main
 
 
@@ -82,7 +84,7 @@ public class Maps {
 		}
 	}
 	
-	public int[][] getMap(){
+	public Room[][] getMap(){
 		/*
 		for (int i = 0; i < len; i++) {
 			if(!used[i]) {
@@ -95,6 +97,7 @@ public class Maps {
 		
 		boolean available = false;
 		int pick;
+		Room[][] retMap = new Room[9][9];
 		for(int i = 0; i < len; i++) {
 			if(!used[i]) {
 				available = true;
@@ -106,7 +109,14 @@ public class Maps {
 				pick = r.nextInt(len);
 			}
 			used[pick] = true;
-			return a[pick];
+			for (int i = 0; i < a[pick].length; i++) {
+				for (int j = 0; j < a[pick][i].length; j++) {
+					int num = a[pick][i][j];
+					Room r = convertRoom(num, i, j);
+					retMap[i][j] = r;
+				}
+			}
+			return retMap;
 		}
 		else {
 			for(int i = 0; i < len; i++) {
@@ -114,14 +124,22 @@ public class Maps {
 			}
 			pick = r.nextInt(len);
 			used[pick] = true;
-			return a[pick];
+			for (int i = 0; i < a[pick].length; i++) {
+				for (int j = 0; j < a[pick][i].length; j++) {
+					int num = a[pick][i][j];
+					Room r = convertRoom(num, i, j);
+					retMap[i][j] = r;
+				}
+			}
+			return retMap;
 		}
 		
 	}
 	
-	public int[][] getLoadedMap(){
+	public Room[][] getLoadedMap(){
 		boolean available = false;
 		int pick;
+		Room[][] retMap = new Room[9][9];
 		for(int i = 0; i < len2; i++) {
 			if(!used2[i]) {
 				available = true;
@@ -133,7 +151,14 @@ public class Maps {
 				pick = r.nextInt(len2);
 			}
 			used2[pick] = true;
-			return in[pick];
+			for (int i = 0; i < a[pick].length; i++) {
+				for (int j = 0; j < a[pick][i].length; j++) {
+					int num = a[pick][i][j];
+					Room r = convertRoom(num, i, j);
+					retMap[i][j] = r;
+				}
+			}
+			return retMap;
 		}
 		else {
 			for(int i = 0; i < len2; i++) {
@@ -141,8 +166,46 @@ public class Maps {
 			}
 			pick = r.nextInt(len2);
 			used2[pick] = true;
-			return in[pick];
+			for (int i = 0; i < a[pick].length; i++) {
+				for (int j = 0; j < a[pick][i].length; j++) {
+					int num = a[pick][i][j];
+					Room r = convertRoom(num, i, j);
+					retMap[i][j] = r;
+				}
+			}
+			return retMap;
 		}
+	}
+	
+	public Room convertRoom(int num, int i, int j) {
+		Room r = new Room();
+		r.x = i;
+		r.y = j;
+		if (num < 500 && num > 250) { //start room
+			r.start = true;
+			r.seen = true;
+			Paint.pos[0] = i;
+			Paint.pos[1] = j;
+		}
+		if (num > 500 && num < 750) { //pot room
+			r.pot = true;
+		}
+		if (num > 750 && num < 999) { //defender
+			r.defender = true;
+		}
+		if (num % 2 == 1) {
+			r.up = true;
+		}
+		if (num % 3 == 1) {
+			r.right = true;
+		}
+		if (num % 5 == 1) {
+			r.down = true;
+		}
+		if (num % 7 == 1) {
+			r.left = true;
+		}
+		return r;
 	}
 }
 

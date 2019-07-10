@@ -15,6 +15,8 @@ import controller.Keyboard;
 import controller.Mouse;
 import model.Main;
 import model.Maps;
+import model.Room;
+import model.Window;
 
 public class Paint {
 	private static JPanel c1;
@@ -22,10 +24,14 @@ public class Paint {
 	private static Mouse mouse1;
 	public static Maps map;
 	private static Keyboard key;
-	private static int[][] m;
+	private static Window win;
+	private static Room[][] m;
 	public static int[] pos = {0,0};
-	public static boolean[][] seen = new boolean[9][9];
 	private static int tutor;
+	public enum CurrentFrame {
+		HOME, MAP, TUTORIAL, CONTROLS, CREDITS
+	}
+	public static CurrentFrame current = CurrentFrame.HOME;
 	
 	public static void paintMain() {
 		JFrame frame = new JFrame();
@@ -39,7 +45,9 @@ public class Paint {
 		frame.setVisible(true);
 		mouse1 = new Mouse();
 		key = new Keyboard();
+		win = new Window();
 		c1.addMouseListener(mouse1);
+		frame.addWindowListener(win);
 		frame.addKeyListener(key);
 		try {
 			map = new Maps();
@@ -61,10 +69,10 @@ public class Paint {
 		    Idef = ImageIO.read(url3);
 		} catch (IOException e) {
 		}
-		
 		paintHome();
 	}
 	public static void paintHome() {
+		current = CurrentFrame.HOME;
 		Graphics g = c1.getGraphics();
 		g.drawImage(Iback,0,0,null);
 		Font f1 = new Font("SansSerif", Font.BOLD, 40);
@@ -93,6 +101,7 @@ public class Paint {
 		new Button(3, 345, 650, 236, 50, Color.GRAY, "Back to home", c1, mouse1);
 	}
 	public static void paintTutorial(int n) {
+		current = CurrentFrame.TUTORIAL;
 		if (n == 0) {
 			tutor = 1;
 			paintTutorial1();
@@ -139,7 +148,7 @@ public class Paint {
 		
 		try {
 			BufferedImage Im;
-			String s = "Tutorial " + Integer.toString(n-1) + ".PNG";
+			String s = "../resources/Tutorial " + Integer.toString(n-1) + ".PNG";
 			URL url = Main.class.getResource(s);
 		    Im = ImageIO.read(url);
 		    if(n == 2) {
@@ -200,6 +209,7 @@ public class Paint {
 	}
 	
 	public static void startGame(boolean loaded) {
+		current = CurrentFrame.MAP;
 		Graphics g = c1.getGraphics();
 		g.fillRect(0, 0, 1000, 1000);
 		
@@ -215,42 +225,40 @@ public class Paint {
 		}
 		for (int i = 0; i < 9; i++) {
 			for (int k = 0; k < 9; k++) {
-				seen[i][k] = false;
-				if(m[i][k] > 250 && m[i][k] < 500) {
-					pos[0] = i;
-					pos[1] = k;
+				if(m[i][k].start) {
+					pos[0] = m[i][k].x;
+					pos[1] = m[i][k].y;
 				}
 			}
 		}
-		drawRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
-		seen[pos[0]][pos[1]] = true;
+		paintRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
 	}
 	
-	public static void drawRoom(int y, int x, int n) {
+	public static void paintRoom(int y, int x, Room n) {
+		current = CurrentFrame.MAP;
 		Graphics g = c1.getGraphics();
-		if(!seen[pos[0]][pos[1]]) {
 			g.setColor(Color.getHSBColor(0, 0, (float) .2));
 			g.fillRect(52+96*x, 22+96*y, 72, 72);
 			
-			if(n%2 == 1) {
+			if(n.up) {
 				g.setColor(Color.getHSBColor(0, 0, (float) .2));
 				g.fillRect(72+96*x, 96*y-6, 32, 32);
 				g.setColor(Color.DARK_GRAY);
 				g.fillRect(76+96*x, 96*y-6, 24, 32);
 			}
-			if(n%3 == 1) {
+			if(n.right) {
 				g.setColor(Color.getHSBColor(0, 0, (float) .2));
 				g.fillRect(120+96*x, 42+96*y, 32, 32);
 				g.setColor(Color.DARK_GRAY);
 				g.fillRect(120+96*x, 46+96*y, 32, 24);
 			}
-			if(n%5 == 1) {
+			if(n.down) {
 				g.setColor(Color.getHSBColor(0, 0, (float) .2));
 				g.fillRect(72+96*x, 90+96*y, 32, 32);
 				g.setColor(Color.DARK_GRAY);
 				g.fillRect(76+96*x, 90+96*y, 24, 32);
 			}
-			if(n%7 == 1) {
+			if(n.left) {
 				g.setColor(Color.getHSBColor(0, 0, (float) .2));
 				g.fillRect(24+96*x, 42+96*y, 32, 32);
 				g.setColor(Color.DARK_GRAY);
@@ -259,69 +267,66 @@ public class Paint {
 			
 			g.setColor(Color.GRAY);
 			g.fillRect(56+96*x, 26+96*y, 64, 64);
-			if(n > 500 && n < 750) {
+			if(n.pot) {
 				g.drawImage(Ipot, 57+96*x, 27+96*y,null);
 			}
-			if(n > 750 && n < 999) {
+			if(n.defender) {
 				g.drawImage(Idef, 57+96*x, 27+96*y, 121+96*x, 91+96*y, 0, 0, 131, 131, null);
 			}
-		}
+		n.seen = true;
 		g.setColor(Color.BLUE);
 		g.fillOval(82+96*x, 52+96*y, 12, 12);
 	}
 	
-	public static void cleanRoom(int y, int x, int n) {
+	public static void cleanRoom(int y, int x, Room n) {
 		Graphics g = c1.getGraphics();
 		g.setColor(Color.GRAY);
 		g.fillRect(56+96*x, 26+96*y, 64, 64);
-		if(n > 500 && n < 750) {
+		if(n.pot) {
 			g.drawImage(Ipot, 57+96*x, 27+96*y,null);
 		}
-		if(n > 750 && n < 999) {
+		if(n.defender) {
 			g.drawImage(Idef, 57+96*x, 27+96*y, 121+96*x, 91+96*y, 0, 0, 131, 131, null);
 		}
 	}
 	
 	public static void moveUp() {
-		if(m[pos[0]][pos[1]]%2 == 1) {
+		if(m[pos[0]][pos[1]].up) {
 			cleanRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
 			pos[0]--;
-			drawRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
-			seen[pos[0]][pos[1]] = true;
+			paintRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
 			//System.out.println("Up");
 		}
 	}
 	
 	public static void moveDown() {
-		if(m[pos[0]][pos[1]]%5 == 1) {
+		if(m[pos[0]][pos[1]].down) {
 			cleanRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
 			pos[0]++;
-			drawRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
-			seen[pos[0]][pos[1]] = true;
+			paintRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
 			//System.out.println("Down");
 		}
 	}
 	
 	public static void moveRight() {
-		if(m[pos[0]][pos[1]]%3 == 1) {
+		if(m[pos[0]][pos[1]].right) {
 			cleanRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
 			pos[1]++;
-			drawRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
-			seen[pos[0]][pos[1]] = true;
+			paintRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
 			//System.out.println("Right");
 		}
 	}
 	
 	public static void moveLeft() {
-		if(m[pos[0]][pos[1]]%7 == 1) {
+		if(m[pos[0]][pos[1]].left) {
 			cleanRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
 			pos[1]--;
-			drawRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
-			seen[pos[0]][pos[1]] = true;
+			paintRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
 			//System.out.println("Left");
 		}
 	}
 	public static void credit() {
+		current = CurrentFrame.CREDITS;
 		Graphics g = c1.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,1000,1000);
@@ -335,5 +340,37 @@ public class Paint {
 		g.drawString("Maps: Rushers of pub halls runs, RL's from all discords, several other sources.", 20, 250);
 		
 		new Button(3,350,870,236,50,Color.GRAY,"Back to home", c1, mouse1);
+	}
+	public static void repaint() {
+		switch (current) {
+			case TUTORIAL:
+				paintTutorial(0);
+				break;
+			case MAP:
+				repaintMap();
+				break;
+			case HOME:
+				paintHome();
+				break;
+			case CREDITS:
+				credit();
+				break;
+			case CONTROLS:
+				paintControls();
+				break;
+			default:
+				break;
+		}
+	}
+	public static void repaintMap() {
+		Graphics g = c1.getGraphics();
+		g.setColor(Color.BLACK);
+		g.fillRect(0,0,1000,1000);
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				if (m[i][j].seen)
+					paintRoom(pos[0], pos[1], m[i][j]);
+			}
+		}
 	}
 }

@@ -7,15 +7,6 @@ import controller.Mouse;
 import view.Paint;
 
 public class Main{
-	
-	
-	private static Mouse mouse1;
-	public static Maps map;
-	private static Keyboard key;
-	private static int[][] m;
-	public static int[] pos = {0,0};
-	public static boolean[][] seen = new boolean[9][9];
-	private static int tutor;
 
 	public static void main(String[] args) {
 		Paint.paintMain();
