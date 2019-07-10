@@ -51,6 +51,11 @@ public class Window implements WindowListener {
 		Paint.repaint();
 
 	}
+	
+	public void windowStateChanged(WindowEvent arg0) {
+		Paint.repaint();
+
+	}
 
 }
 

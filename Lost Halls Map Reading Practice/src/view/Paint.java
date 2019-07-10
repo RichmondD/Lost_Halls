@@ -2,6 +2,8 @@ package view;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -27,7 +29,7 @@ public class Paint {
 	private static Window win;
 	private static Room[][] m;
 	public static int[] pos = {0,0};
-	private static int tutor;
+	public static int tutor;
 	public enum CurrentFrame {
 		HOME, MAP, TUTORIAL, CONTROLS, CREDITS
 	}
@@ -49,23 +51,33 @@ public class Paint {
 		c1.addMouseListener(mouse1);
 		frame.addWindowListener(win);
 		frame.addKeyListener(key);
+		
+		frame.addComponentListener( new ComponentListener() {
+            public void componentResized( ComponentEvent e ) {}
+            public void componentMoved( ComponentEvent e ) {
+                repaint();
+            }
+            public void componentShown( ComponentEvent e ) {}
+            public void componentHidden( ComponentEvent e ) {}
+        } );
+		
 		try {
 			map = new Maps();
 		} catch (IOException e1) {
 		}
 		
 		try {
-			URL url1 = Main.class.getResource("../resources/Background Map.jpg");
+			URL url1 = Main.class.getResource("/resources/Background Map.jpg");
 		    Iback = ImageIO.read(url1);
 		} catch (IOException e) {
 		}
 		try {
-			URL url2 = Main.class.getResource("../resources/Pot.png");
+			URL url2 = Main.class.getResource("/resources/Pot.png");
 		    Ipot = ImageIO.read(url2);
 		} catch (IOException e) {
 		}
 		try {
-			URL url3 = Main.class.getResource("../resources/Defender.png");
+			URL url3 = Main.class.getResource("/resources/Defender.png");
 		    Idef = ImageIO.read(url3);
 		} catch (IOException e) {
 		}
@@ -102,22 +114,15 @@ public class Paint {
 	}
 	public static void paintTutorial(int n) {
 		current = CurrentFrame.TUTORIAL;
-		if (n == 0) {
-			tutor = 1;
+		tutor += n;
+		if (tutor == 1) {
 			paintTutorial1();
 		}
-		else{
-			tutor += n;
-			if (tutor == 1) {
-				tutor = 1;
-				paintTutorial1();
-			}
-			else if(tutor > 1 && tutor < 11) {
-				paintTutorial2(tutor);
-			}
-			else if(tutor == 11) {
-				paintTutorialEnd();
-			}
+		else if(tutor > 1 && tutor < 11) {
+			paintTutorial2(tutor);
+		}
+		else if(tutor == 11) {
+			paintTutorialEnd();
 		}
 	}
 	public static void paintTutorial1() {
@@ -148,7 +153,7 @@ public class Paint {
 		
 		try {
 			BufferedImage Im;
-			String s = "../resources/Tutorial " + Integer.toString(n-1) + ".PNG";
+			String s = "/resources/Tutorial " + Integer.toString(n-1) + ".PNG";
 			URL url = Main.class.getResource(s);
 		    Im = ImageIO.read(url);
 		    if(n == 2) {

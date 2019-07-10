@@ -52,6 +52,7 @@ public class Mouse implements MouseListener {
 		else if(e.getX() > xy[3][0] && e.getX() < xy[3][1] && e.getY() > xy[3][2] && e.getY() < xy[3][3] && b[3]) {
 			//System.out.println("4");
 			b = new boolean[len];
+			Paint.tutor = 1;
 			Paint.paintTutorial(0);
 		}
 		else if(e.getX() > xy[4][0] && e.getX() < xy[4][1] && e.getY() > xy[4][2] && e.getY() < xy[4][3] && b[4]) {
