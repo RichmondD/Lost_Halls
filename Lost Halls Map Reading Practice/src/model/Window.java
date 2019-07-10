@@ -9,7 +9,6 @@ public class Window implements WindowListener {
 
 	public Window () {
 		super();
-		System.out.println("zzz");
 	}
 	@Override
 	public void windowActivated(WindowEvent arg0) {
@@ -37,7 +36,6 @@ public class Window implements WindowListener {
 
 	@Override
 	public void windowDeiconified(WindowEvent arg0) {
-		System.out.println("code reached");
 		Paint.repaint();
 
 	}
@@ -55,3 +53,5 @@ public class Window implements WindowListener {
 	}
 
 }
+
+//Created by Nacnudd and Goalaso from the Pub Halls Discord server.

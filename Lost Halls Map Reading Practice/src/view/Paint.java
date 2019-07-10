@@ -275,7 +275,7 @@ public class Paint {
 			}
 		n.seen = true;
 		g.setColor(Color.BLUE);
-		g.fillOval(82+96*x, 52+96*y, 12, 12);
+		g.fillOval(82+96*pos[1], 52+96*pos[0], 12, 12);
 	}
 	
 	public static void cleanRoom(int y, int x, Room n) {
@@ -333,7 +333,7 @@ public class Paint {
 		g.setColor(Color.WHITE);
 		Font f = new Font("SansSerif", Font.BOLD, 18);
 		g.setFont(f);
-		g.drawString("Creator: Nacnudd", 20, 50);
+		g.drawString("Creators: Goalaso, Nacnudd", 20, 50);
 		g.drawString("Programming Assistance: Goalaso", 20, 100);
 		g.drawString("Assisting Ideas: Salcosa, NGL, RealmGold, Goalaso, LOLFAILZ", 20, 150);
 		g.drawString("Tutorial Content: Creator of LH_map_lessons", 20, 200);
@@ -369,8 +369,10 @@ public class Paint {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				if (m[i][j].seen)
-					paintRoom(pos[0], pos[1], m[i][j]);
+					paintRoom(i, j, m[i][j]);
 			}
 		}
 	}
 }
+
+//Created by Nacnudd and Goalaso from the Pub Halls Discord server.

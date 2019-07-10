@@ -13,4 +13,4 @@ public class Main{
 	}
 }
 
-//Created by Nacnudd from the Pub Halls Discord server.
+//Created by Nacnudd and Goalaso from the Pub Halls Discord server.
