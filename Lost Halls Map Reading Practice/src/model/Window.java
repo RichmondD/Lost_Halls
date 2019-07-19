@@ -9,7 +9,7 @@ public class Window implements WindowStateListener {
 
 	@Override
 	public void windowStateChanged(WindowEvent e) {
-		System.out.println("state changed");
+		//System.out.println("state changed");
 		Paint.repaintDelay();
 	}
 	

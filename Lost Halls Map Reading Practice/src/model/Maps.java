@@ -190,7 +190,7 @@ public class Maps {
 		r.y = j;
 		if (num < 500 && num > 250) { //start room
 			r.start = true;
-			r.seen = true;
+			//r.seen = true;
 			Paint.pos[0] = i;
 			Paint.pos[1] = j;
 		}

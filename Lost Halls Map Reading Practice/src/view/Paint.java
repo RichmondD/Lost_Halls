@@ -31,6 +31,7 @@ public class Paint {
 	private static Room[][] m = new Room[9][9];
 	public static int[] pos = {0,0};
 	public static int tutor;
+	private static int potsHit = 0, defendersHit = 0;
 	private static JFrame frame;
 	private static boolean imported;
 	private static int shiftx, shifty;
@@ -251,6 +252,8 @@ public class Paint {
 			m = map.getMap();
 			new Button(1, (int)(frame.getWidth()*.75-86), (int)(frame.getHeight()-115), 172, 50, Color.GRAY, "New Map", c1, mouse1);
 		}
+		paintHits();
+		/*   								This code seems to be redundant, spawn is set already.
 		for (int i = 0; i < 9; i++) {
 			for (int k = 0; k < 9; k++) {
 				if(m[i][k].start) {
@@ -259,6 +262,7 @@ public class Paint {
 				}
 			}
 		}
+		*/
 		paintRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
 	}
 	
@@ -297,13 +301,60 @@ public class Paint {
 			g.fillRect((int)(shiftx+scale*(16+96*x)), (int)(shifty+scale*(16+96*y)), (int)(scale*(64)), (int)(scale*(64)));
 			if(n.pot) {
 				g.drawImage(Ipot, (int)(shiftx+scale*(17+96*x)), (int)(shifty+scale*(17+96*y)), (int)(shiftx+scale*(79+96*x)), (int)(shifty+scale*(79+96*y)), 0, 0, 64, 64, null);
+				if(!n.seen) {
+					potsHit++;
+					paintHits();
+				}
 			}
 			if(n.defender) {
 				g.drawImage(Idef, (int)(shiftx+scale*(17+96*x)), (int)(shifty+scale*(17+96*y)), (int)(shiftx+scale*(79+96*x)), (int)(shifty+scale*(79+96*y)), 0, 0, 131, 131, null);
+				if(!n.seen) {
+					defendersHit++;
+					paintHits();
+				}
+			}
+			if(n.start && !n.seen) {
+				paintSpawnPeeks(y, x);
 			}
 		n.seen = true;
 		g.setColor(Color.BLUE);
 		g.fillOval((int)(shiftx+scale*(42+96*pos[1])), (int)(shifty+scale*(42+96*pos[0])), (int)(scale*(12)), (int)(scale*(12)));
+	}
+	
+	public static void paintHits() {
+		Graphics g = c1.getGraphics();
+		g.setColor(Color.BLACK);
+		g.fillRect((int)(frame.getWidth()*.5-70), (int)(frame.getHeight()-120), 140, 70);
+		g.setColor(Color.WHITE);
+		Font f = new Font("SansSerif", Font.BOLD, 24);
+		g.setFont(f);
+		g.drawString("Defender: "+defendersHit, (int)(frame.getWidth()*.5-60), (int)(frame.getHeight()-100));
+		g.drawString("Pots: "+potsHit, (int)(frame.getWidth()*.5-40), (int)(frame.getHeight()-70));
+	}
+	
+	public static void paintSpawnPeeks(int x, int y) {
+		Graphics g = c1.getGraphics();
+		g.setColor(Color.BLACK);
+		if(m[x][y].up && !m[x-1][y].seen) {
+			paintRoom(x-1, y, m[x-1][y]);
+			g.fillRect((int)(shiftx+scale*(96*y)-17), (int)(shifty+scale*(96*(x-1)-17)), (int)(scale*(130)), (int)(scale*(66)));
+			m[x-1][y].seen = false;
+		}
+		if(m[x][y].down && !m[x+1][y].seen) {
+			paintRoom(x+1, y, m[x+1][y]);
+			g.fillRect((int)(shiftx+scale*(96*y)-17), (int)(shifty+scale*(96*(x+1)+48)), (int)(scale*(130)), (int)(scale*(66)));
+			m[x+1][y].seen = false;
+		}
+		if(m[x][y].right && !m[x][y+1].seen) {
+			paintRoom(x, y+1, m[x][y+1]);
+			g.fillRect((int)(shiftx+scale*(96*(y+1)+48)), (int)(shifty+scale*(96*x)-17), (int)(scale*(66)), (int)(scale*(130)));
+			m[x][y+1].seen = false;
+		}
+		if(m[x][y].left && !m[x][y-1].seen) {
+			paintRoom(x, y-1, m[x][y-1]);
+			g.fillRect((int)(shiftx+scale*(96*(y-1)-17)), (int)(shifty+scale*(96*x)-17), (int)(scale*(66)), (int)(scale*(130)));
+			m[x][y-1].seen = false;
+		}
 	}
 	
 	public static void cleanRoom(int y, int x, Room n) {
@@ -417,8 +468,12 @@ public class Paint {
 			for (int j = 0; j < 9; j++) {
 				if (m[i][j].seen)
 					paintRoom(i, j, m[i][j]);
+					if(m[i][j].start) {
+						paintSpawnPeeks(i,j);
+					}
 			}
 		}
+		paintHits();
 		new Button(3, (int)(frame.getWidth()*.25-118), (int)(frame.getHeight()-115), 236, 50, Color.GRAY, "Back to home", c1, mouse1);
 		if(imported) {
 			new Button(9, (int)(frame.getWidth()*.75-86), (int)(frame.getHeight()-115), 172, 50, Color.GRAY, "New Map", c1, mouse1);
