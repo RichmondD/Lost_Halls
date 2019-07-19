@@ -42,7 +42,6 @@ public class Maps {
 		a = new int[len][9][9];
 		used = new boolean[len];
 		String[] b;
-		
 		for (int i = 0; i < len; i++) {
 			for(int j = 0; j < 9; j++) {
 				b = l.get(i*9+j).split(",");
@@ -51,6 +50,7 @@ public class Maps {
 				}
 			}
 		}
+		//System.out.println(len);
 	}
 	
 	public void importMap(File f1) throws IOException {
@@ -85,13 +85,21 @@ public class Maps {
 	
 	public Room[][] getMap(){
 		/*
-		for (int i = 0; i < len; i++) {
-			if(!used[i]) {
-				used[i] = true;
-				return a[i];
+		Room[][] retMap = new Room[9][9];
+		for (int k = 86; k > 0; k--) {
+			if(!used[k]) {
+				for (int i = 0; i < a[k].length; i++) {
+					for (int j = 0; j < a[k][i].length; j++) {
+						Room r = convertRoom(a[k][i][j], i, j);
+						retMap[i][j] = r;
+					}
+				}
+				used[k] = true;
+				System.out.println(k);
+				return retMap;
 			}
 		}
-		return a[0];
+		return retMap;
 		*/
 		
 		boolean available = false;

@@ -365,6 +365,7 @@ public class Paint {
 		g.drawString("Assisting Ideas: Salcosa, NGL, RealmGold, LOLFAILZ", 50, (int)(frame.getHeight()*.2));
 		g.drawString("Tutorial Content: Creator of LH_map_lessons", 50, (int)(frame.getHeight()*.3));
 		g.drawString("Maps: Rushers of pub halls runs, RL's from all discords, several other sources.", 50,(int)(frame.getHeight()*.4));
+		g.drawString("Rushers with Significant Contributions: TreePuns, Beregue, DrunkDevil", 50,(int)(frame.getHeight()*.5));
 		
 		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
 	}
