@@ -9,6 +9,7 @@ public class Room {
 	public boolean pot;
 	public boolean defender;
 	public boolean start;
+	public boolean border;
 	public int x, y;
 	public Room () {
 		left = false;
@@ -18,9 +19,10 @@ public class Room {
 		seen = false;
 		pot = false;
 		defender = false;
+		border = false;
 		x = 0; y = 0;
 	}
-	public Room (boolean l, boolean r, boolean u, boolean d, boolean po, boolean def, boolean st) {
+	public Room (boolean l, boolean r, boolean u, boolean d, boolean po, boolean def, boolean st, boolean bor) {
 		left = l;
 		right = r;
 		up = u;
@@ -29,6 +31,7 @@ public class Room {
 		start = st;
 		pot = po;
 		defender = def;
+		border = bor;
 	}
 
 }

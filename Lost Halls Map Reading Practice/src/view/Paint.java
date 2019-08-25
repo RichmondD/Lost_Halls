@@ -34,7 +34,7 @@ public class Paint {
 	private static int potsHit = 0, defendersHit = 0;
 	private static JFrame frame;
 	private static boolean imported;
-	private static int shiftx, shifty;
+	private static int shiftx, shifty, shiftroomx, shiftroomy;
 	private static float scale;
 	public enum CurrentFrame {
 		HOME, MAP, TUTORIAL, CONTROLS, CREDITS
@@ -241,15 +241,29 @@ public class Paint {
 		g.fillRect(shiftx-1, shifty-1, (int)(866*scale), (int)(866*scale));
 		g.setColor(Color.BLACK);
 		g.fillRect(shiftx, shifty, (int)(866*scale)-2, (int)(866*scale)-2);
+		shiftroomx = 0;
+		shiftroomy = 0;
 		
 		new Button(3, (int)(frame.getWidth()*.25-118), (int)(frame.getHeight()-115), 236, 50, Color.GRAY, "Back to home", c1, mouse1);
 		
 		if(imported) {
 			m = map.getLoadedMap();
+			if(m[0][8].border) {
+				shiftroomx = 48;
+			}
+			if(m[8][0].border) {
+				shiftroomy = 48;
+			}
 			new Button(9, (int)(frame.getWidth()*.75-86), (int)(frame.getHeight()-115), 172, 50, Color.GRAY, "New Map", c1, mouse1);
 		}
 		else {
 			m = map.getMap();
+			if(m[0][8].border) {
+				shiftroomx = 48;
+			}
+			if(m[8][0].border) {
+				shiftroomy = 48;
+			}
 			new Button(1, (int)(frame.getWidth()*.75-86), (int)(frame.getHeight()-115), 172, 50, Color.GRAY, "New Map", c1, mouse1);
 		}
 		paintHits();
@@ -270,44 +284,44 @@ public class Paint {
 		current = CurrentFrame.MAP;
 		Graphics g = c1.getGraphics();
 			g.setColor(Color.getHSBColor(0, 0, (float) .2));
-			g.fillRect((int)(shiftx+scale*(12+96*x)), (int)(shifty+scale*(12+96*y)), (int)(scale*(72)), (int)(scale*(72)));
+			g.fillRect((int)(shiftx+scale*(12+shiftroomx+96*x)), (int)(shifty+scale*(12+96*y+shiftroomy)), (int)(scale*(72)), (int)(scale*(72)));
 			
 			if(n.up) {
 				g.setColor(Color.getHSBColor(0, 0, (float) .2));
-				g.fillRect((int)(shiftx+scale*(32+96*x)), (int)(shifty+scale*(96*y-16)), (int)(scale*(32)), (int)(scale*(32)));
+				g.fillRect((int)(shiftx+scale*(32+shiftroomx+96*x)), (int)(shifty+scale*(96*y-16+shiftroomy)), (int)(scale*(32)), (int)(scale*(32)));
 				g.setColor(Color.DARK_GRAY);
-				g.fillRect((int)(shiftx+scale*(36+96*x)), (int)(shifty+scale*(96*y-16)), (int)(scale*(24)), (int)(scale*(32)));
+				g.fillRect((int)(shiftx+scale*(36+shiftroomx+96*x)), (int)(shifty+scale*(96*y-16+shiftroomy)), (int)(scale*(24)), (int)(scale*(32)));
 			}
 			if(n.right) {
 				g.setColor(Color.getHSBColor(0, 0, (float) .2));
-				g.fillRect((int)(shiftx+scale*(80+96*x)), (int)(shifty+scale*(32+96*y)), (int)(scale*(32)), (int)(scale*(32)));
+				g.fillRect((int)(shiftx+scale*(80+shiftroomx+96*x)), (int)(shifty+scale*(32+96*y+shiftroomy)), (int)(scale*(32)), (int)(scale*(32)));
 				g.setColor(Color.DARK_GRAY);
-				g.fillRect((int)(shiftx+scale*(80+96*x)), (int)(shifty+scale*(36+96*y)), (int)(scale*(32)), (int)(scale*(24)));
+				g.fillRect((int)(shiftx+scale*(80+shiftroomx+96*x)), (int)(shifty+scale*(36+96*y+shiftroomy)), (int)(scale*(32)), (int)(scale*(24)));
 			}
 			if(n.down) {
 				g.setColor(Color.getHSBColor(0, 0, (float) .2));
-				g.fillRect((int)(shiftx+scale*(32+96*x)), (int)(shifty+scale*(80+96*y)), (int)(scale*(32)), (int)(scale*(32)));
+				g.fillRect((int)(shiftx+scale*(32+shiftroomx+96*x)), (int)(shifty+scale*(80+96*y+shiftroomy)), (int)(scale*(32)), (int)(scale*(32)));
 				g.setColor(Color.DARK_GRAY);
-				g.fillRect((int)(shiftx+scale*(36+96*x)), (int)(shifty+scale*(80+96*y)), (int)(scale*(24)), (int)(scale*(32)));
+				g.fillRect((int)(shiftx+scale*(36+shiftroomx+96*x)), (int)(shifty+scale*(80+96*y+shiftroomy)), (int)(scale*(24)), (int)(scale*(32)));
 			}
 			if(n.left) {
 				g.setColor(Color.getHSBColor(0, 0, (float) .2));
-				g.fillRect((int)(shiftx+scale*(-16+96*x)), (int)(shifty+scale*(32+96*y)), (int)(scale*(32)), (int)(scale*(32)));
+				g.fillRect((int)(shiftx+scale*(-16+shiftroomx+96*x)), (int)(shifty+scale*(32+96*y+shiftroomy)), (int)(scale*(32)), (int)(scale*(32)));
 				g.setColor(Color.DARK_GRAY);
-				g.fillRect((int)(shiftx+scale*(-16+96*x)), (int)(shifty+scale*(36+96*y)), (int)(scale*(32)), (int)(scale*(24)));
+				g.fillRect((int)(shiftx+scale*(-16+shiftroomx+96*x)), (int)(shifty+scale*(36+96*y+shiftroomy)), (int)(scale*(32)), (int)(scale*(24)));
 			}
 			
 			g.setColor(Color.GRAY);
-			g.fillRect((int)(shiftx+scale*(16+96*x)), (int)(shifty+scale*(16+96*y)), (int)(scale*(64)), (int)(scale*(64)));
+			g.fillRect((int)(shiftx+scale*(16+shiftroomx+96*x)), (int)(shifty+scale*(16+96*y+shiftroomy)), (int)(scale*(64)), (int)(scale*(64)));
 			if(n.pot) {
-				g.drawImage(Ipot, (int)(shiftx+scale*(17+96*x)), (int)(shifty+scale*(17+96*y)), (int)(shiftx+scale*(79+96*x)), (int)(shifty+scale*(79+96*y)), 0, 0, 64, 64, null);
+				g.drawImage(Ipot, (int)(shiftx+scale*(17+shiftroomx+96*x)), (int)(shifty+scale*(17+96*y+shiftroomy)), (int)(shiftx+scale*(79+shiftroomx+96*x)), (int)(shifty+scale*(79+96*y+shiftroomy)), 0, 0, 64, 64, null);
 				if(!n.seen) {
 					potsHit++;
 					paintHits();
 				}
 			}
 			if(n.defender) {
-				g.drawImage(Idef, (int)(shiftx+scale*(17+96*x)), (int)(shifty+scale*(17+96*y)), (int)(shiftx+scale*(79+96*x)), (int)(shifty+scale*(79+96*y)), 0, 0, 131, 131, null);
+				g.drawImage(Idef, (int)(shiftx+scale*(17+shiftroomx+96*x)), (int)(shifty+scale*(17+96*y+shiftroomy)), (int)(shiftx+scale*(79+shiftroomx+96*x)), (int)(shifty+scale*(79+96*y+shiftroomy)), 0, 0, 131, 131, null);
 				if(!n.seen) {
 					defendersHit++;
 					paintHits();
@@ -318,13 +332,13 @@ public class Paint {
 			}
 		n.seen = true;
 		g.setColor(Color.BLUE);
-		g.fillOval((int)(shiftx+scale*(42+96*pos[1])), (int)(shifty+scale*(42+96*pos[0])), (int)(scale*(12)), (int)(scale*(12)));
+		g.fillOval((int)(shiftx+scale*(42+shiftroomx+96*pos[1])), (int)(shifty+scale*(42+96*pos[0]+shiftroomy)), (int)(scale*(12)), (int)(scale*(12)));
 	}
 	
 	public static void paintHits() {
 		Graphics g = c1.getGraphics();
 		g.setColor(Color.BLACK);
-		g.fillRect((int)(frame.getWidth()*.5-70), (int)(frame.getHeight()-120), 140, 70);
+		g.fillRect((int)(frame.getWidth()*.5-80), (int)(frame.getHeight()-120), 160, 70);
 		g.setColor(Color.WHITE);
 		Font f = new Font("SansSerif", Font.BOLD, 24);
 		g.setFont(f);
@@ -337,22 +351,22 @@ public class Paint {
 		g.setColor(Color.BLACK);
 		if(m[x][y].up && !m[x-1][y].seen) {
 			paintRoom(x-1, y, m[x-1][y]);
-			g.fillRect((int)(shiftx+scale*(96*y)-17), (int)(shifty+scale*(96*(x-1)-17)), (int)(scale*(130)), (int)(scale*(66)));
+			g.fillRect((int)(shiftx+scale*(96*y-17+shiftroomx)), (int)(shifty+scale*(96*(x-1)-17+shiftroomy)), (int)(scale*(130)), (int)(scale*(66)));
 			m[x-1][y].seen = false;
 		}
 		if(m[x][y].down && !m[x+1][y].seen) {
 			paintRoom(x+1, y, m[x+1][y]);
-			g.fillRect((int)(shiftx+scale*(96*y)-17), (int)(shifty+scale*(96*(x+1)+48)), (int)(scale*(130)), (int)(scale*(66)));
+			g.fillRect((int)(shiftx+scale*(96*y-17+shiftroomx)), (int)(shifty+scale*(96*(x+1)+48+shiftroomy)), (int)(scale*(130)), (int)(scale*(66)));
 			m[x+1][y].seen = false;
 		}
 		if(m[x][y].right && !m[x][y+1].seen) {
 			paintRoom(x, y+1, m[x][y+1]);
-			g.fillRect((int)(shiftx+scale*(96*(y+1)+48)), (int)(shifty+scale*(96*x)-17), (int)(scale*(66)), (int)(scale*(130)));
+			g.fillRect((int)(shiftx+scale*(96*(y+1)+48+shiftroomx)), (int)(shifty+scale*(96*x+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 			m[x][y+1].seen = false;
 		}
 		if(m[x][y].left && !m[x][y-1].seen) {
 			paintRoom(x, y-1, m[x][y-1]);
-			g.fillRect((int)(shiftx+scale*(96*(y-1)-17)), (int)(shifty+scale*(96*x)-17), (int)(scale*(66)), (int)(scale*(130)));
+			g.fillRect((int)(shiftx+scale*(96*(y-1)-17+shiftroomx)), (int)(shifty+scale*(96*x+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 			m[x][y-1].seen = false;
 		}
 	}
@@ -360,12 +374,12 @@ public class Paint {
 	public static void cleanRoom(int y, int x, Room n) {
 		Graphics g = c1.getGraphics();
 		g.setColor(Color.GRAY);
-		g.fillRect((int)(shiftx+scale*(16+96*x)), (int)(shifty+scale*(16+96*y)), (int)(scale*(64)), (int)(scale*(64)));
+		g.fillRect((int)(shiftx+scale*(16+shiftroomx+96*x)), (int)(shifty+scale*(16+shiftroomy+96*y)), (int)(scale*(64)), (int)(scale*(64)));
 		if(n.pot) {
-			g.drawImage(Ipot, (int)(shiftx+scale*(17+96*x)), (int)(shifty+scale*(17+96*y)), (int)(shiftx+scale*(79+96*x)), (int)(shifty+scale*(79+96*y)), 0, 0, 64, 64, null);
+			g.drawImage(Ipot, (int)(shiftx+scale*(17+shiftroomx+96*x)), (int)(shifty+scale*(17+shiftroomy+96*y)), (int)(shiftx+scale*(79+shiftroomx+96*x)), (int)(shifty+scale*(79+shiftroomy+96*y)), 0, 0, 64, 64, null);
 		}
 		if(n.defender) {
-			g.drawImage(Idef, (int)(shiftx+scale*(17+96*x)), (int)(shifty+scale*(17+96*y)), (int)(shiftx+scale*(79+96*x)), (int)(shifty+scale*(79+96*y)), 0, 0, 131, 131, null);
+			g.drawImage(Idef, (int)(shiftx+scale*(17+shiftroomx+96*x)), (int)(shifty+scale*(17+shiftroomy+96*y)), (int)(shiftx+scale*(79+shiftroomx+96*x)), (int)(shifty+scale*(79+shiftroomy+96*y)), 0, 0, 131, 131, null);
 		}
 	}
 	
@@ -412,11 +426,11 @@ public class Paint {
 		g.setColor(Color.WHITE);
 		Font f = new Font("SansSerif", Font.BOLD, 18);
 		g.setFont(f);
-		g.drawString("Creators: Nacnudd, Goalaso", 50, (int)(frame.getHeight()*.1));
-		g.drawString("Assisting Ideas: Salcosa, NGL, RealmGold, LOLFAILZ", 50, (int)(frame.getHeight()*.2));
+		g.drawString("Creator: Nacnudd", 50, (int)(frame.getHeight()*.1));
+		g.drawString("Assisting Ideas: Salcosa, NGL, RealmGold, LOLFAILZ, Goalaso", 50, (int)(frame.getHeight()*.2));
 		g.drawString("Tutorial Content: Creator of LH_map_lessons", 50, (int)(frame.getHeight()*.3));
 		g.drawString("Maps: Rushers of pub halls runs, RL's from all discords, several other sources.", 50,(int)(frame.getHeight()*.4));
-		g.drawString("Rushers with Significant Contributions: TreePuns, Beregue, DrunkDevil", 50,(int)(frame.getHeight()*.5));
+		g.drawString("Rushers with Significant Contributions: TreePuns, Beregue, DrunkDevil, Evilfan, SemiCar, xRomeWolvx", 50,(int)(frame.getHeight()*.5));
 		
 		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
 	}

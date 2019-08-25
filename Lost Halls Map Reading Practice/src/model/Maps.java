@@ -86,7 +86,7 @@ public class Maps {
 	public Room[][] getMap(){
 		/*
 		Room[][] retMap = new Room[9][9];
-		for (int k = 86; k > 0; k--) {
+		for (int k = 0; k < 150; k++) {
 			if(!used[k]) {
 				for (int i = 0; i < a[k].length; i++) {
 					for (int j = 0; j < a[k][i].length; j++) {
@@ -95,7 +95,7 @@ public class Maps {
 					}
 				}
 				used[k] = true;
-				System.out.println(k);
+				//System.out.println(k);
 				return retMap;
 			}
 		}
@@ -116,10 +116,11 @@ public class Maps {
 				pick = r.nextInt(len);
 			}
 			used[pick] = true;
+			System.out.println(pick);
 			for (int i = 0; i < a[pick].length; i++) {
 				for (int j = 0; j < a[pick][i].length; j++) {
-					int num = a[pick][i][j];
-					Room r = convertRoom(num, i, j);
+					//int num = a[pick][i][j];
+					Room r = convertRoom(a[pick][i][j], i, j);
 					retMap[i][j] = r;
 				}
 			}
@@ -188,16 +189,20 @@ public class Maps {
 		Room r = new Room();
 		r.x = i;
 		r.y = j;
+		//System.out.println(i+" "+j+" "+num);
+		if (num == 1) {
+			r.border = true;
+		}
 		if (num < 500 && num > 250) { //start room
 			r.start = true;
 			//r.seen = true;
 			Paint.pos[0] = i;
 			Paint.pos[1] = j;
 		}
-		if (num > 500 && num < 750) { //pot room
+		else if (num > 500 && num < 750) { //pot room
 			r.pot = true;
 		}
-		if (num > 750 && num < 999) { //defender
+		else if (num > 750 && num < 999) { //defender
 			r.defender = true;
 		}
 		if (num % 2 == 1) {
