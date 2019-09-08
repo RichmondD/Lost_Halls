@@ -6,6 +6,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
@@ -23,7 +25,7 @@ import model.Window;
 
 public class Paint {
 	private static JPanel c1;
-	private static BufferedImage Iback, Ipot, Idef;
+	public static BufferedImage Iback, Ipot, Idef, Itroom;
 	private static Mouse mouse1;
 	public static Maps map;
 	private static Keyboard key;
@@ -31,17 +33,18 @@ public class Paint {
 	private static Room[][] m = new Room[9][9];
 	public static int[] pos = {0,0};
 	public static int tutor;
-	private static int potsHit = 0, defendersHit = 0;
+	public static int potsHit, defendersHit;
 	private static JFrame frame;
-	private static boolean imported;
+	public static boolean imported;
 	private static int shiftx, shifty, shiftroomx, shiftroomy;
-	private static float scale;
+	private static double scale;
+	public static Tutorial tut;
 	public enum CurrentFrame {
 		HOME, MAP, TUTORIAL, CONTROLS, CREDITS
 	}
 	public static CurrentFrame current = CurrentFrame.HOME;
 	
-	public static void paintMain() {
+	public static void paintMain() throws IOException {
 		frame = new JFrame();
 		frame.setSize(960,996);
 		frame.setTitle("Map Reading Practice");
@@ -57,6 +60,10 @@ public class Paint {
 		c1.addMouseListener(mouse1);
 		frame.addWindowStateListener(win); 
 		frame.addKeyListener(key);
+		tut = new Tutorial(c1, frame, mouse1);
+		tutor = 1;
+		potsHit = 0;
+		defendersHit = 0;
 		
 		frame.addComponentListener( new ComponentAdapter() {
             public void componentResized( ComponentEvent e ) {
@@ -93,6 +100,11 @@ public class Paint {
 		    Idef = ImageIO.read(url3);
 		} catch (IOException e) {
 		}
+		try {
+			URL url4 = Main.class.getResource("/resources/Troom.png");
+		    Itroom = ImageIO.read(url4);
+		} catch (IOException e) {
+		}
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				m[i][j] = new Room();
@@ -112,7 +124,7 @@ public class Paint {
 		new Button(1,(int)(frame.getWidth()/2-125),(int)(frame.getHeight()*.3800),250,50,Color.GRAY,"Give me a map", c1, mouse1);
 		new Button(5,(int)(frame.getWidth()/2-113),(int)(frame.getHeight()*.4800),226,50,Color.GRAY,"Import a map", c1, mouse1);
 		new Button(2,(int)(frame.getWidth()/2-80),(int)(frame.getHeight()*.5800),160,50,Color.GRAY,"Controls", c1, mouse1);
-		new Button(4,(int)(frame.getWidth()/2-167),(int)(frame.getHeight()*.6800),334,50,Color.GRAY,"Tutorial (Incomplete)", c1, mouse1);
+		new Button(4,(int)(frame.getWidth()/2-76),(int)(frame.getHeight()*.6800),152,50,Color.GRAY,"Tutorial", c1, mouse1);
 		new Button(8,(int)(frame.getWidth()/2-72),(int)(frame.getHeight()*.7800),144,50,Color.GRAY,"Credits", c1, mouse1);
 	}
 	public static void paintControls() {
@@ -130,105 +142,33 @@ public class Paint {
 		g.drawString("Good Luck.", (int)(frame.getWidth()/2-95), (int)(frame.getHeight()*.5180));
 		new Button(3, (int)(frame.getWidth()/2-134), (int)(frame.getHeight()*.7000), 236, 50, Color.GRAY, "Back to home", c1, mouse1);
 	}
+	
 	public static void paintTutorial(int n) {
-		current = CurrentFrame.TUTORIAL;
+		Paint.current = CurrentFrame.TUTORIAL;
+		Tutorial.shiftx = (int)(shiftx + scale*345.6);
+		Tutorial.shifty = (int)(shifty + scale*345.6);
+		Tutorial.scale = scale*.6;
 		tutor += n;
-		if (tutor == 1) {
-			paintTutorial1();
-		}
-		else if(tutor > 1 && tutor < 11) {
-			paintTutorial2(tutor);
-		}
-		else if(tutor == 11) {
-			paintTutorialEnd();
-		}
-	}
-	public static void paintTutorial1() {
-		Graphics g = c1.getGraphics();
-		g.setColor(Color.BLACK);
-		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
-		g.setColor(Color.WHITE);
-		Font f1 = new Font("SansSerif", Font.BOLD, 30);
-		g.setFont(f1);
-		g.drawString("Welcome to the Lost Halls map reading tutorial.", (int)(frame.getWidth()/2-360), (int)(frame.getHeight()*.1000));
-		g.drawString("The tutorial is split into several sections:", (int)(frame.getWidth()/2-310), (int)(frame.getHeight()*.2000));
-		g.drawString("Part 1: Map Structure", (int)(frame.getWidth()*.15), (int)(frame.getHeight()*.3350));
-		g.drawString("Part 2: Map Reading Using Space", (int)(frame.getWidth()*.15), (int)(frame.getHeight()*.4050));
-		g.drawString("Part 3: Map Reading Using Splits", (int)(frame.getWidth()*.15), (int)(frame.getHeight()*.4750));
-		g.drawString("Part 4: Map Reading Using both Space and Splits", (int)(frame.getWidth()*.15), (int)(frame.getHeight()*.5450));
-		g.drawString("This tutorial has a lot of information, so make sure you", (int)(frame.getWidth()/2-400), (int)(frame.getHeight()*.7150));
-		g.drawString("take your time, and don't be afraid to hit pots sometimes.", (int)(frame.getWidth()/2-410), (int)(frame.getHeight()*.7850));
-		new Button(3,(int)(frame.getWidth()/2-130),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
-	}
-	public static void paintTutorial2(int n) {
-		Graphics g = c1.getGraphics();
-		g.setColor(Color.BLACK);
-		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
-		g.setColor(Color.WHITE);
-		Font f1 = new Font("SansSerif", Font.BOLD, 40);
-		g.setFont(f1);
-		
+		Method method;
 		try {
-			BufferedImage Im;
-			String s = "/resources/Tutorial " + Integer.toString(n-1) + ".PNG";
-			URL url = Main.class.getResource(s);
-		    Im = ImageIO.read(url);
-		    if(n == 2) {
-		    	g.drawImage(Im, 0, 0, frame.getWidth(),frame.getHeight()-110, 0, 0, 885, 889, null);
-		    	g.drawString("Part 1: Map Structure", (int)(frame.getWidth()*.5-205), (int)(frame.getHeight()*.07));
-		    }
-		    else if(n == 3) {
-		    	g.drawImage(Im, 0, 0, frame.getWidth(),frame.getHeight()-110, 0, 0, 890, 886, null);
-		    }
-		    else if(n == 4) {
-		    	g.drawImage(Im, 0, 0, frame.getWidth(),frame.getHeight()-110, 0, 0, 886, 882, null);
-		    }
-		    else if(n == 5) {
-		    	g.drawImage(Im, 0, 0, frame.getWidth(),frame.getHeight()-110, 0, 0, 895, 900, null);
-		    }
-		    else if(n == 6) {
-		    	g.drawImage(Im, 0, 0, frame.getWidth(),frame.getHeight()-110, 0, 0, 897, 898, null);
-		    }
-		    else if(n == 7) {
-		    	g.drawImage(Im, 0, 0, frame.getWidth(),frame.getHeight()-110, 0, 0, 897, 903, null);
-		    }
-		    else if(n == 8) {
-		    	g.drawImage(Im, 0, 0, frame.getWidth(),frame.getHeight()-110, 0, 0, 901, 898, null);
-		    }
-		    else if(n == 9) {
-		    	g.drawImage(Im, 0, 0, frame.getWidth(),frame.getHeight()-110, 0, 0, 953, 944, null);
-		    }
-		    else if(n == 10) {
-		    	g.drawImage(Im, 0, 0, frame.getWidth(),frame.getHeight()-110, 0, 0, 957, 947, null);
-		    }
-		} catch (IOException e) {
+			method = Tutorial.class.getDeclaredMethod("paintTutorial"+tutor);
+			method.invoke(frame);
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
-	}
-	
-	public static void paintTutorialEnd() {
-		Graphics g = c1.getGraphics();
-		g.setColor(Color.BLACK);
-		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
-		g.setColor(Color.WHITE);
-		Font f = new Font("SansSerif", Font.BOLD, 70);
-		g.setFont(f);
-		g.drawString("That's it so far!", (int)(frame.getWidth()*.5-250), (int)(frame.getHeight()*.460));
-		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-	}
-	
-	public static void paintTutorialn() {
-		Graphics g = c1.getGraphics();
-		g.setColor(Color.BLACK);
-		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
-		g.setColor(Color.WHITE);
-		Font f = new Font("SansSerif", Font.BOLD, 20);
-		g.setFont(f);
 	}
 	
 	public static void startGame(boolean loaded) {
@@ -248,23 +188,18 @@ public class Paint {
 		
 		if(imported) {
 			m = map.getLoadedMap();
-			if(m[0][8].border) {
-				shiftroomx = 48;
-			}
-			if(m[8][0].border) {
-				shiftroomy = 48;
-			}
 			new Button(9, (int)(frame.getWidth()*.75-86), (int)(frame.getHeight()-115), 172, 50, Color.GRAY, "New Map", c1, mouse1);
 		}
 		else {
 			m = map.getMap();
-			if(m[0][8].border) {
-				shiftroomx = 48;
-			}
-			if(m[8][0].border) {
-				shiftroomy = 48;
-			}
 			new Button(1, (int)(frame.getWidth()*.75-86), (int)(frame.getHeight()-115), 172, 50, Color.GRAY, "New Map", c1, mouse1);
+		}
+		
+		if(m[0][8].border) {
+			shiftroomx = 48;
+		}
+		if(m[8][0].border) {
+			shiftroomy = 48;
 		}
 		paintHits();
 		/*   								This code seems to be redundant, spawn is set already.
@@ -338,7 +273,7 @@ public class Paint {
 	public static void paintHits() {
 		Graphics g = c1.getGraphics();
 		g.setColor(Color.BLACK);
-		g.fillRect((int)(frame.getWidth()*.5-80), (int)(frame.getHeight()-120), 160, 70);
+		g.fillRect((int)(frame.getWidth()*.5-80), (int)(frame.getHeight()-120), 170, 70);
 		g.setColor(Color.WHITE);
 		Font f = new Font("SansSerif", Font.BOLD, 24);
 		g.setFont(f);
@@ -423,14 +358,16 @@ public class Paint {
 		Graphics g = c1.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
-		g.setColor(Color.WHITE);
-		Font f = new Font("SansSerif", Font.BOLD, 18);
+		g.setColor(Color.LIGHT_GRAY);
+		Font f = new Font("SansSerif", Font.BOLD, 22);
 		g.setFont(f);
 		g.drawString("Creator: Nacnudd", 50, (int)(frame.getHeight()*.1));
-		g.drawString("Assisting Ideas: Salcosa, NGL, RealmGold, LOLFAILZ, Goalaso", 50, (int)(frame.getHeight()*.2));
-		g.drawString("Tutorial Content: Creator of LH_map_lessons", 50, (int)(frame.getHeight()*.3));
+		g.drawString("Tutorial Creator: Nacnudd", 50, (int)(frame.getHeight()*.2));
+		g.drawString("Assisting Ideas: Salcosa, NGL, RealmGold, LOLFAILZ, Goalaso", 50, (int)(frame.getHeight()*.3));
 		g.drawString("Maps: Rushers of pub halls runs, RL's from all discords, several other sources.", 50,(int)(frame.getHeight()*.4));
-		g.drawString("Rushers with Significant Contributions: TreePuns, Beregue, DrunkDevil, Evilfan, SemiCar, xRomeWolvx", 50,(int)(frame.getHeight()*.5));
+		g.drawString("Rushers with Significant Contributions: TreePuns, Beregue, DrunkDevil, Evilfan,", 50,(int)(frame.getHeight()*.5));
+		g.drawString("Maldir, Semicar, xRomeWolvx, Frus", 100, (int)(frame.getHeight()*.54));
+		g.drawString("Assistance Encrypting Maps: FoxLoli, Xbyxbd", 50, (int)(frame.getHeight()*.64));
 		
 		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
 	}
@@ -480,11 +417,12 @@ public class Paint {
 		g.fillRect(shiftx, shifty, (int)(866*scale)-2, (int)(866*scale)-2);
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
-				if (m[i][j].seen)
+				if (m[i][j].seen) {
 					paintRoom(i, j, m[i][j]);
 					if(m[i][j].start) {
 						paintSpawnPeeks(i,j);
 					}
+				}
 			}
 		}
 		paintHits();

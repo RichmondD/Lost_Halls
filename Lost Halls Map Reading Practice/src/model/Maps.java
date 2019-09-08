@@ -21,12 +21,13 @@ public class Maps {
 	private boolean[] used, used2;
 	private int len, len2;
 	private int[][][] in;
+	private int[][][] t;
 	
 	public Maps() throws IOException {
 		r = new Random();
 		List<String> l = new ArrayList<String>();
 		
-		InputStream in = Maps.class.getResourceAsStream("/resources/Maps.txt");
+		InputStream in = Main.class.getResourceAsStream("/resources/Maps.txt");
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		while(br.ready()) {
 			for (int i = 0; i < 9; i++) {
@@ -50,7 +51,31 @@ public class Maps {
 				}
 			}
 		}
-		//System.out.println(len);
+		
+		List<String> l2 = new ArrayList<String>();
+		
+		InputStream in2 = Main.class.getResourceAsStream("/resources/TutorialMaps.txt");
+		BufferedReader br2 = new BufferedReader(new InputStreamReader(in2));
+		while(br2.ready()) {
+			for (int i = 0; i < 9; i++) {
+				l2.add(br2.readLine());
+			}
+			br2.readLine();
+			br2.readLine();
+		}
+		
+		br2.close();
+		
+		int len3 = (int) l2.size()/9;
+		t = new int[len3][9][9];
+		for (int i = 0; i < len3; i++) {
+			for(int j = 0; j < 9; j++) {
+				b = l2.get(i*9+j).split(",");
+				for(int k = 0; k < 9; k++) {
+					t[i][j][k] = Integer.parseInt(b[k]);
+				}
+			}
+		}
 	}
 	
 	public void importMap(File f1) throws IOException {
@@ -183,6 +208,17 @@ public class Maps {
 			}
 			return retMap;
 		}
+	}
+	
+	public Room[][] getTutorialMap(int n) {
+		Room[][] retMap = new Room[9][9];
+		for (int i = 0; i < t[n].length; i++) {
+			for (int j = 0; j < t[n][i].length; j++) {
+				Room r = convertRoom(t[n][i][j], i, j);
+				retMap[i][j] = r;
+			}
+		}
+		return retMap;
 	}
 	
 	public Room convertRoom(int num, int i, int j) {
