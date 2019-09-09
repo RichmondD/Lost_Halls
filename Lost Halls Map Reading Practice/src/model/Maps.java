@@ -111,7 +111,7 @@ public class Maps {
 	public Room[][] getMap(){
 		/*
 		Room[][] retMap = new Room[9][9];
-		for (int k = 0; k < 150; k++) {
+		for (int k = 0; k < 100; k++) {
 			if(!used[k]) {
 				for (int i = 0; i < a[k].length; i++) {
 					for (int j = 0; j < a[k][i].length; j++) {

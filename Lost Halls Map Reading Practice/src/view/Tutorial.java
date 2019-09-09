@@ -352,7 +352,7 @@ public class Tutorial {
 		g.drawString("think of them as one big fat room. There can be a maximum of 2 loops in a", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2700));
 		g.drawString("map, one on main path and one on a path to one of the pots or troom. Also,", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3100));
 		g.drawString("the maximum recorded splits", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3500));
-		g.drawString("from a single loop is 4, but it", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3900));
+		g.drawString("from a single loop is 5, but it", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3900));
 		g.drawString("may or may not be possible to", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.4300));
 		g.drawString("have more.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.4700));
 		
