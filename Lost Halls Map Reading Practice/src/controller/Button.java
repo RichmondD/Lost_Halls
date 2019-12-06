@@ -2,8 +2,7 @@ package controller;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-
-import javax.swing.JPanel;
+import java.awt.Image;
 
 public class Button{
 	
@@ -14,10 +13,10 @@ public class Button{
 	private int ID;
 	private Color color;
 	private String text;
-	public JPanel frame;
+	public Image i;
 	public Mouse m;
 	
-	public Button(int ID, int x, int y, int length, int width, Color color, String text, JPanel frame, Mouse m) {
+	public Button(int ID, int x, int y, int length, int width, Color color, String text, Image i, Mouse m) {
 		super();
 		this.x = x;
 		this.y = y;
@@ -25,10 +24,10 @@ public class Button{
 		this.width = width;
 		this.color = color;
 		this.text = text;
-		this.frame = frame;
+		this.i = i;
 		this.ID = ID;
 		this.m = m;
-		draw(frame.getGraphics());
+		draw(i.getGraphics());
 	}
 
 	public int getX() {
@@ -68,4 +67,4 @@ public class Button{
 	
 }
 
-//Created by Nacnudd and Goalaso from the Pub Halls Discord server.
+//Created by Nacnudd from the Pub Halls Discord server.

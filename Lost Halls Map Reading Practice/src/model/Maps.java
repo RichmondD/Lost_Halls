@@ -120,13 +120,13 @@ public class Maps {
 					}
 				}
 				used[k] = true;
-				//System.out.println(k);
+				System.out.println(k);
 				return retMap;
 			}
 		}
 		return retMap;
-		*/
-		
+		/*/
+		//*
 		boolean available = false;
 		int pick;
 		Room[][] retMap = new Room[9][9];
@@ -166,7 +166,7 @@ public class Maps {
 			}
 			return retMap;
 		}
-		
+		//*/
 	}
 	
 	public Room[][] getLoadedMap(){
@@ -257,4 +257,4 @@ public class Maps {
 	}
 }
 
-//Created by Nacnudd and Goalaso from the Pub Halls Discord server.
+//Created by Nacnudd from the Pub Halls Discord server.

@@ -5,21 +5,21 @@ public class Room {
 	public boolean right;
 	public boolean up;
 	public boolean down;
-	public boolean seen;
 	public boolean pot;
 	public boolean defender;
 	public boolean start;
 	public boolean border;
+	public boolean seen;
 	public int x, y;
 	public Room () {
 		left = false;
 		right = false;
 		up = false;
 		down = false;
-		seen = false;
 		pot = false;
 		defender = false;
 		border = false;
+		seen = false;
 		x = 0; y = 0;
 	}
 	public Room (boolean l, boolean r, boolean u, boolean d, boolean po, boolean def, boolean st, boolean bor) {
@@ -27,7 +27,6 @@ public class Room {
 		right = r;
 		up = u;
 		down = d;
-		seen = st;
 		start = st;
 		pot = po;
 		defender = def;
@@ -36,4 +35,4 @@ public class Room {
 
 }
 
-//Created by Nacnudd and Goalaso from the Pub Halls Discord server.
+//Created by Nacnudd from the Pub Halls Discord server.

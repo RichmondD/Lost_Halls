@@ -25,6 +25,10 @@ public class Keyboard implements KeyListener {
 		else if(k.getKeyCode() == KeyEvent.VK_LEFT) {
 			Paint.moveLeft();
 		}
+		else if(k.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+			Paint.undo();
+			//System.out.println("undo");
+		}
 	}
 
 	@Override
@@ -39,4 +43,4 @@ public class Keyboard implements KeyListener {
 
 }
 
-//Created by Nacnudd and Goalaso from the Pub Halls Discord server.
+//Created by Nacnudd from the Pub Halls Discord server.

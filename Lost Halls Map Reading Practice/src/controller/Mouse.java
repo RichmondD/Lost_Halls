@@ -1,6 +1,7 @@
 package controller;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -8,9 +9,9 @@ import javax.swing.JFileChooser;
 
 import view.Paint;
 
-public class Mouse implements MouseListener {
+public class Mouse implements MouseListener, MouseMotionListener {
 	
-	private int len = 9;
+	private int len = 13;
 	private int[][] xy = new int[len][4];
 	public boolean[] b = new boolean[len];
 	
@@ -31,7 +32,10 @@ public class Mouse implements MouseListener {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void mousePressed(MouseEvent e) {
+		if(Paint.current == Paint.CurrentFrame.MAP && Paint.selectEnabled) {
+			Paint.paintHighlights(e.getX(), e.getY());
+		}
 		if(e.getX() > xy[0][0] && e.getX() < xy[0][1] && e.getY() > xy[0][2] && e.getY() < xy[0][3] && b[0]) {
 			//System.out.println("1");
 			b = new boolean[len];
@@ -40,7 +44,7 @@ public class Mouse implements MouseListener {
 		else if(e.getX() > xy[1][0] && e.getX() < xy[1][1] && e.getY() > xy[1][2] && e.getY() < xy[1][3] && b[1]) {
 			//System.out.println("2");
 			b = new boolean[len];
-			Paint.paintControls();
+			Paint.paintSettings();
 		}
 		else if(e.getX() > xy[2][0] && e.getX() < xy[2][1] && e.getY() > xy[2][2] && e.getY() < xy[2][3] && b[2]) {
 			//System.out.println("3");
@@ -93,6 +97,31 @@ public class Mouse implements MouseListener {
 			b = new boolean[len];
 			Paint.startGame(true);
 		}
+		else if(e.getX() > xy[9][0] && e.getX() < xy[9][1] && e.getY() > xy[9][2] && e.getY() < xy[9][3] && b[9]) {
+			//System.out.println("1");
+			b = new boolean[len];
+			Paint.showHits = !Paint.showHits;
+			Paint.potsHit = 0;
+			Paint.defendersHit = 0;
+			Paint.rePaint();
+		}
+		else if(e.getX() > xy[10][0] && e.getX() < xy[10][1] && e.getY() > xy[10][2] && e.getY() < xy[10][3] && b[10]) {
+			//System.out.println("1");
+			b = new boolean[len];
+			Paint.showSpawn = !Paint.showSpawn;
+			Paint.rePaint();
+		}
+		else if(e.getX() > xy[11][0] && e.getX() < xy[11][1] && e.getY() > xy[11][2] && e.getY() < xy[11][3] && b[11]) {
+			//System.out.println("1");
+			b = new boolean[len];
+			Paint.peekSpawn = !Paint.peekSpawn;
+			Paint.rePaint();
+		}else if(e.getX() > xy[12][0] && e.getX() < xy[12][1] && e.getY() > xy[12][2] && e.getY() < xy[12][3] && b[12]) {
+			//System.out.println("1");
+			b = new boolean[len];
+			Paint.selectEnabled = !Paint.selectEnabled;
+			Paint.rePaint();
+		}
 	}
 
 	@Override
@@ -104,13 +133,22 @@ public class Mouse implements MouseListener {
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
+	public void mouseClicked(MouseEvent e) {
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 	}
 
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		Paint.checkIfHighlight(e.getX(), e.getY());
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+	}
+
 }
 
-//Created by Nacnudd and Goalaso from the Pub Halls Discord server.
+//Created by Nacnudd from the Pub Halls Discord server.

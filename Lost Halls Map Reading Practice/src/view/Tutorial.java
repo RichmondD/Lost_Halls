@@ -3,31 +3,35 @@ package view;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.io.IOException;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import controller.Button;
 import controller.Mouse;
 import model.Room;
 
 public class Tutorial {
-	private static JPanel c1;
+	private static Image i;
 	private static JFrame frame;
 	private static Mouse mouse1;
 	public static int shiftx, shifty, shiftroomx, shiftroomy;
 	public static double scale;
 	
-	public Tutorial(JPanel c, JFrame f, Mouse ms) throws IOException {
-		c1 = c;
+	public Tutorial(Image im, JFrame f, Mouse ms) throws IOException {
+		i = im;
 		frame = f;
 		mouse1 = ms;
+	}
+	
+	public void setImage(Image im) {
+		i = im;
 	}
 	
 	public static void tutorialMap(int n) {
 		Room[][] map = Paint.map.getTutorialMap(n);
 		
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.black);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -54,7 +58,7 @@ public class Tutorial {
 	}
 	
 	public static void paintRoom(int y, int x, Room n) {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 			g.setColor(Color.getHSBColor(0, 0, (float) .2));
 			g.fillRect((int)(shiftx+scale*(12+shiftroomx+96*x)), (int)(shifty+scale*(12+96*y+shiftroomy)), (int)(scale*(72)), (int)(scale*(72)));
 			
@@ -92,22 +96,35 @@ public class Tutorial {
 				g.drawImage(Paint.Idef, (int)(shiftx+scale*(17+shiftroomx+96*x)), (int)(shifty+scale*(17+96*y+shiftroomy)), (int)(shiftx+scale*(79+shiftroomx+96*x)), (int)(shifty+scale*(79+96*y+shiftroomy)), 0, 0, 131, 131, null);
 			}
 			if(n.start) {
-				Font f = new Font("SansSerif", Font.BOLD, 32);
+				Font f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 				g.setFont(f);
 				g.setColor(Color.BLUE);
-				g.drawString("S", (int)(shiftx+scale*(30+shiftroomx+96*x)), (int)(shifty+scale*(66+96*y+shiftroomy)));
+				g.drawString("S", (int)(shiftx+scale*(29+shiftroomx+96*x)), (int)(shifty+scale*(66+96*y+shiftroomy)));
 				//paintSpawnS(y, x);
 			}
-			n.seen = true;
 		}
 	
+	public static void paintButtons() {
+		if(Paint.tutor != 1) {
+			new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", i, mouse1);
+		}
+		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", i, mouse1);
+		if(Paint.tutor != 60) {
+			new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", i, mouse1);
+		}
+	}
+	
 	public static void paintTutorial1() {
-		Graphics g = c1.getGraphics();
+		if(i == null) {
+			System.out.println("test");
+		}
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
 		Font f = new Font("SansSerif", Font.BOLD, 30);
 		g.setFont(f);
+		
 		g.drawString("Welcome to the Lost Halls Map Reading Tutorial", (int)(frame.getWidth()/2-360), (int)(frame.getHeight()*.1000));
 		g.drawString("The tutorial is split into several sections:", (int)(frame.getWidth()/2-310), (int)(frame.getHeight()*.2000));
 		g.drawString("Chapter 1: Map Structure", (int)(frame.getWidth()/2-340), (int)(frame.getHeight()*.3300));
@@ -119,12 +136,12 @@ public class Tutorial {
 		g.drawString("This tutorial has a lot of information, so make sure you", (int)(frame.getWidth()/2-400), (int)(frame.getHeight()*.6900));
 		g.drawString("take your time, and don't be afraid to ask me(Nacnudd), or", (int)(frame.getWidth()/2-420), (int)(frame.getHeight()*.7600));
 		g.drawString("any other experienced map reader, about anything confusing.", (int)(frame.getWidth()/2-430), (int)(frame.getHeight()*.8300));
-		new Button(3,(int)(frame.getWidth()/2-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		
+		paintButtons();
 	}
 	
 	public static void paintTutorial2() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -142,13 +159,11 @@ public class Tutorial {
 		g.drawString("be near the middle of the map, and will never be all the way on the edge.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2700));
 		g.drawString("In this map, spawn is top left of the middle and has 3 splits.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3100));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 
 	public static void paintTutorial3() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -166,7 +181,7 @@ public class Tutorial {
 		g.drawString("meaning you will never have a pot room split off of the path to another pot", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2700));
 		g.drawString("room.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3100));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -181,13 +196,11 @@ public class Tutorial {
 		g.drawString("10", (int)(shiftx+scale*(17+shiftroomx+96*3)), (int)(shifty+scale*(66+96*7+shiftroomy)));
 		g.drawString("11", (int)(shiftx+scale*(17+shiftroomx+96*3)), (int)(shifty+scale*(66+96*6+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial4() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -209,7 +222,7 @@ public class Tutorial {
 		g.drawRect((int)(shiftx+scale*(shiftroomx+96*0)), (int)(shifty+scale*(96*5+shiftroomy)), (int)(scale*(288)), (int)(scale*(288)));
 		g.drawLine((int)(shiftx+scale*(shiftroomx+96*2)), (int)(shifty+scale*(96*5+shiftroomy)), (int)(shiftx+scale*(shiftroomx+96*2)), (int)(shifty+scale*(96*8+shiftroomy)));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -224,13 +237,11 @@ public class Tutorial {
 		g.drawString("10", (int)(shiftx+scale*(17+shiftroomx+96*3)), (int)(shifty+scale*(66+96*7+shiftroomy)));
 		g.drawString("11", (int)(shiftx+scale*(17+shiftroomx+96*3)), (int)(shifty+scale*(66+96*6+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial5() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -253,7 +264,7 @@ public class Tutorial {
 		g.setColor(Color.WHITE);
 		g.drawRect((int)(shiftx+scale*(shiftroomx+96*0)), (int)(shifty+scale*(96*5+shiftroomy)), (int)(scale*(288)), (int)(scale*(288)));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -276,13 +287,11 @@ public class Tutorial {
 		g.drawString("5", (int)(shiftx+scale*(30+shiftroomx+96*6)), (int)(shifty+scale*(67+96*5+shiftroomy)));
 		g.drawString("6", (int)(shiftx+scale*(30+shiftroomx+96*7)), (int)(shifty+scale*(67+96*7+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial6() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -309,7 +318,7 @@ public class Tutorial {
 		g.setColor(Color.WHITE);
 		g.drawRect((int)(shiftx+scale*(shiftroomx+96*0)), (int)(shifty+scale*(96*5+shiftroomy)), (int)(scale*(288)), (int)(scale*(288)));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -328,13 +337,11 @@ public class Tutorial {
 		g.fillRect((int)(shiftx+scale*(16+shiftroomx+96*2)), (int)(shifty+scale*(16+96*1+shiftroomy)), (int)(scale*(64)), (int)(scale*(64)));
 		g.drawImage(Paint.Itroom, (int)(shiftx+scale*(17+shiftroomx+96*2)), (int)(shifty+scale*(17+96*1+shiftroomy)), (int)(shiftx+scale*(79+shiftroomx+96*2)), (int)(shifty+scale*(79+96*1+shiftroomy)), 0, 0, 128, 128, null);
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial7() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -356,7 +363,7 @@ public class Tutorial {
 		g.drawString("may or may not be possible to", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.4300));
 		g.drawString("have more.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.4700));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(66+96*2+shiftroomy)));
@@ -384,13 +391,11 @@ public class Tutorial {
 		g.drawRect((int)(shiftx+scale*(48+shiftroomx+96*1))-1, (int)(shifty+scale*(48+96*0+shiftroomy))-1, (int)(scale*(96)+2), (int)(scale*(96)+2));
 		g.drawRect((int)(shiftx+scale*(48+shiftroomx+96*4))-1, (int)(shifty+scale*(48+96*2+shiftroomy))-1, (int)(scale*(96)+2), (int)(scale*(96)+2));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial8() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -417,13 +422,11 @@ public class Tutorial {
 		}
 		g.drawLine((int)(shiftx+scale*(shiftroomx+96*0)), (int)(shifty+scale*(96*9+shiftroomy)), (int)(shiftx+scale*(shiftroomx+96*8)), (int)(shifty+scale*(96*9+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial9() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -444,13 +447,11 @@ public class Tutorial {
 		g.drawString("little space or a loop has already been created for that specific context.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.4300));
 		g.drawString("Together, these rules create all our halls maps.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.4700));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial10() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -474,7 +475,7 @@ public class Tutorial {
 		g.setColor(Color.YELLOW);
 		g.drawRect((int)(shiftx+scale*(shiftroomx+96*4))-1, (int)(shifty+scale*(96*1+shiftroomy)), (int)(scale*(192)), (int)(scale*(192)));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*5)), (int)(shifty+scale*(66+96*2+shiftroomy)));
@@ -482,13 +483,11 @@ public class Tutorial {
 		g.drawString("3", (int)(shiftx+scale*(32+shiftroomx+96*4)), (int)(shifty+scale*(67+96*1+shiftroomy)));
 		g.drawString("4", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(67+96*2+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial11() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -506,7 +505,7 @@ public class Tutorial {
 		g.drawString("green one is, but it is possible to be going to pots if the T-split is part", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2700));
 		g.drawString("of a loop, like the red T-split is part of the yellow loop.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3100));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -528,13 +527,11 @@ public class Tutorial {
 		g.setColor(Color.GREEN);
 		g.drawRect((int)(shiftx+scale*(shiftroomx+96*6)), (int)(shifty+scale*(96*4+shiftroomy)), (int)(scale*(96)), (int)(scale*(96)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial12() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -561,7 +558,7 @@ public class Tutorial {
 		g.drawRect((int)(shiftx+scale*(shiftroomx+96*7)), (int)(shifty+scale*(96*3+shiftroomy)), (int)(scale*(96)), (int)(scale*(96)));
 		g.drawRect((int)(shiftx+scale*(shiftroomx+96*3)), (int)(shifty+scale*(96*4+shiftroomy)), (int)(scale*(96)), (int)(scale*(96)));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -576,13 +573,11 @@ public class Tutorial {
 		g.drawString("10", (int)(shiftx+scale*(17+shiftroomx+96*5)), (int)(shifty+scale*(66+96*3+shiftroomy)));
 		g.drawString("11", (int)(shiftx+scale*(17+shiftroomx+96*4)), (int)(shifty+scale*(66+96*3+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial13() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -602,7 +597,7 @@ public class Tutorial {
 		g.drawString("important map reading rules", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3500));
 		g.drawString("so DO NOT forget it!!", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3900));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*3+shiftroomy)));
@@ -611,13 +606,11 @@ public class Tutorial {
 		g.drawString("4", (int)(shiftx+scale*(30+shiftroomx+96*1)), (int)(shifty+scale*(67+96*4+shiftroomy)));
 		g.drawString("5", (int)(shiftx+scale*(30+shiftroomx+96*0)), (int)(shifty+scale*(67+96*4+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial14() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -636,7 +629,7 @@ public class Tutorial {
 		g.drawString("and a map is much more likely to have no main path loop than it is to have", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3100));
 		g.drawString("less than 5 flames.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3500));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*3+shiftroomy)));
@@ -651,13 +644,11 @@ public class Tutorial {
 		g.drawString("10", (int)(shiftx+scale*(15+shiftroomx+96*2)), (int)(shifty+scale*(66+96*7+shiftroomy)));
 		g.drawString("11", (int)(shiftx+scale*(17+shiftroomx+96*2)), (int)(shifty+scale*(66+96*6+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial15() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -673,13 +664,11 @@ public class Tutorial {
 		g.drawString("type you are dealing with, you will be able to make most decisions much", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2300));
 		g.drawString("more easily.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2700));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial16() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -705,7 +694,7 @@ public class Tutorial {
 		g.drawString("is see what side the splits", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.5900));
 		g.drawString("are on and hug the other wall.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.6300));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*3+shiftroomy)));
@@ -731,13 +720,11 @@ public class Tutorial {
 		g.drawString("5", (int)(shiftx+scale*(30+shiftroomx+96*5)), (int)(shifty+scale*(67+96*0+shiftroomy)));
 		g.drawString("6", (int)(shiftx+scale*(30+shiftroomx+96*6)), (int)(shifty+scale*(67+96*6+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial17() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -758,7 +745,7 @@ public class Tutorial {
 		g.drawString("the tutorial.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3900));
 		
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -784,13 +771,11 @@ public class Tutorial {
 		g.drawString("5", (int)(shiftx+scale*(30+shiftroomx+96*2)), (int)(shifty+scale*(67+96*3+shiftroomy)));
 		g.drawString("6", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(67+96*0+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial18() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -816,7 +801,7 @@ public class Tutorial {
 		g.drawString("ok for this map to have 7", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.6600));
 		g.drawString("splits off main path?", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.7000));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -840,13 +825,11 @@ public class Tutorial {
 		g.drawString("6", (int)(shiftx+scale*(30+shiftroomx+96*6)), (int)(shifty+scale*(67+96*2+shiftroomy)));
 		g.drawString("7", (int)(shiftx+scale*(32+shiftroomx+96*5)), (int)(shifty+scale*(66+96*0+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial19() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -868,13 +851,11 @@ public class Tutorial {
 		g.drawString("Step 3. Take the direction from spawn with the most space", (int)(frame.getWidth()/2-400), (int)(frame.getHeight()*.5400));
 		g.drawString("Step 4. Take the direction with a side split over straight", (int)(frame.getWidth()/2-400), (int) (frame.getHeight()*.5800));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial20() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -905,13 +886,11 @@ public class Tutorial {
 		g.fillRect((int)(shiftx+scale*(96*(y+1)+48+shiftroomx)), (int)(shifty+scale*(96*x+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 		g.fillRect((int)(shiftx+scale*(96*(y-1)-17+shiftroomx)), (int)(shifty+scale*(96*x+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial21() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -931,13 +910,11 @@ public class Tutorial {
 		g.drawString("far end of each room, go to", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3500));
 		g.drawString("the next step.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3900));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial22() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -965,13 +942,11 @@ public class Tutorial {
 		g.fillRect((int)(shiftx+scale*(96*(y+1)+48+shiftroomx)), (int)(shifty+scale*(96*x+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 		g.fillRect((int)(shiftx+scale*(96*(y-1)-17+shiftroomx)), (int)(shifty+scale*(96*x+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial23() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1000,13 +975,11 @@ public class Tutorial {
 		g.fillRect((int)(shiftx+scale*(96*(y+1)+48+shiftroomx)), (int)(shifty+scale*(96*x+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 		g.fillRect((int)(shiftx+scale*(96*(y-1)-17+shiftroomx)), (int)(shifty+scale*(96*x+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial24() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1025,13 +998,11 @@ public class Tutorial {
 		g.drawString("10-11 right before defender. I've already discussed how to use this tactic", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3500));
 		g.drawString("in spawn, so here I'll talk about how to use it near defender.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3900));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial25() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1048,7 +1019,7 @@ public class Tutorial {
 		g.drawString("is enough space to have the rest of main path, but there is absolutely no 3x3", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2300));
 		g.drawString("area so right must be the correct decision here.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2700));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*5)), (int)(shifty+scale*(66+96*5+shiftroomy)));
@@ -1062,13 +1033,11 @@ public class Tutorial {
 		g.drawString("9", (int)(shiftx+scale*(32+shiftroomx+96*3)), (int)(shifty+scale*(66+96*1+shiftroomy)));
 		g.drawString("10", (int)(shiftx+scale*(17+shiftroomx+96*3)), (int)(shifty+scale*(66+96*0+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial26() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1087,7 +1056,7 @@ public class Tutorial {
 		g.drawString("space to have defender so we must go down, where there is exactly a 3x3 area", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3100));
 		g.drawString("free of rooms.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3500));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*5)), (int)(shifty+scale*(66+96*5+shiftroomy)));
@@ -1103,13 +1072,11 @@ public class Tutorial {
 		g.drawString("10", (int)(shiftx+scale*(15+shiftroomx+96*4)), (int)(shifty+scale*(66+96*0+shiftroomy)));
 		g.drawString("11", (int)(shiftx+scale*(17+shiftroomx+96*5)), (int)(shifty+scale*(66+96*0+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial27() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1128,7 +1095,7 @@ public class Tutorial {
 		g.drawString("you focus on ending at room 11 next to an open 3x3 area, and not getting", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3100));
 		g.drawString("trapped anywhere small.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3500));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*5)), (int)(shifty+scale*(66+96*5+shiftroomy)));
@@ -1144,13 +1111,11 @@ public class Tutorial {
 		g.drawString("11", (int)(shiftx+scale*(17+shiftroomx+96*4)), (int)(shifty+scale*(66+96*0+shiftroomy)));
 		g.drawString("12", (int)(shiftx+scale*(15+shiftroomx+96*5)), (int)(shifty+scale*(66+96*0+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial28() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1170,7 +1135,7 @@ public class Tutorial {
 		g.drawString("go straight left until you hit", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3500));
 		g.drawString("defender or have to turn.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3900));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -1185,13 +1150,11 @@ public class Tutorial {
 		g.drawString("10", (int)(shiftx+scale*(15+shiftroomx+96*4)), (int)(shifty+scale*(66+96*1+shiftroomy)));
 		g.drawString("11", (int)(shiftx+scale*(17+shiftroomx+96*3)), (int)(shifty+scale*(66+96*1+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial29() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1204,20 +1167,18 @@ public class Tutorial {
 		g.setColor(Color.LIGHT_GRAY);
 		g.drawString("Here we are finally getting to the good stuff. Pretty much all good map readers", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.1500));
 		g.drawString("call directions based off of the splits already seen in the map. This is also", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.1900));
-		g.drawString("the most common tool used for analysis of maps outside fo the game. When", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2300));
+		g.drawString("the most common tool used for analysis of maps outside of the game. When", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2300));
 		g.drawString("you navigate a map, this is your primary tool. The basic premise is every", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2700));
 		g.drawString("pot split you see off of main path takes up space, and your job is to pick", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3100));
 		g.drawString("the splits that leave you in as open of an area as possible at room 11. This", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3500));
 		g.drawString("is also the part of map reading that takes the most practice, which is what", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3900));
 		g.drawString("this program is for, so if you want to get good then practice practice practice.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.4300));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial30() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1243,7 +1204,7 @@ public class Tutorial {
 		g.drawString("the best approximation of", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.5900));
 		g.drawString("space used.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.6300));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*5)), (int)(shifty+scale*(66+96*5+shiftroomy)));
@@ -1291,13 +1252,11 @@ public class Tutorial {
 		g.drawString("?", (int)(shiftx+scale*(29+shiftroomx+96*2)), (int)(shifty+scale*(67+96*0+shiftroomy)));
 		g.drawString("?", (int)(shiftx+scale*(29+shiftroomx+96*4)), (int)(shifty+scale*(67+96*0+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial31() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1315,7 +1274,7 @@ public class Tutorial {
 		g.drawString("the left split and down split would take up as pots, and seeing if you can", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2700));
 		g.drawString("fit defender anywhere.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3100));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*3+shiftroomy)));
@@ -1328,13 +1287,11 @@ public class Tutorial {
 		g.drawString("8", (int)(shiftx+scale*(32+shiftroomx+96*6)), (int)(shifty+scale*(66+96*3+shiftroomy)));
 		g.drawString("9", (int)(shiftx+scale*(32+shiftroomx+96*6)), (int)(shifty+scale*(66+96*4+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial32() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1354,7 +1311,7 @@ public class Tutorial {
 		g.drawString("map as shown, so defender", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3500));
 		g.drawString("doesn't fit anywhere!", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3900));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*3+shiftroomy)));
@@ -1378,13 +1335,11 @@ public class Tutorial {
 		g.drawImage(Paint.Idef, (int)(shiftx+scale*(17+shiftroomx+96*5)), (int)(shifty+scale*(17+96*6+shiftroomy)), (int)(shiftx+scale*(79+shiftroomx+96*5)), (int)(shifty+scale*(79+96*6+shiftroomy)), 0, 0, 131, 131, null);
 		g.drawRect((int)(shiftx+scale*(shiftroomx+96*4)), (int)(shifty+scale*(96*6+shiftroomy)), (int)(scale*(288)), (int)(scale*(288)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial33() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1403,7 +1358,7 @@ public class Tutorial {
 		g.drawString("ending of our pot guess, it doesn't overlap all of them and we know that left", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3100));
 		g.drawString("is the correct decision.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3500));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*3+shiftroomy)));
@@ -1427,13 +1382,11 @@ public class Tutorial {
 		g.drawImage(Paint.Idef, (int)(shiftx+scale*(17+shiftroomx+96*4)), (int)(shifty+scale*(17+96*5+shiftroomy)), (int)(shiftx+scale*(79+shiftroomx+96*4)), (int)(shifty+scale*(79+96*5+shiftroomy)), 0, 0, 131, 131, null);
 		g.drawRect((int)(shiftx+scale*(shiftroomx+96*3)), (int)(shifty+scale*(96*5+shiftroomy)), (int)(scale*(288)), (int)(scale*(288)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial34() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1450,7 +1403,7 @@ public class Tutorial {
 		g.drawString("the down split seems more likely, but by analyzing the situation left becomes", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2300));
 		g.drawString("the clearly better option.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2700));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*3+shiftroomy)));
@@ -1465,13 +1418,11 @@ public class Tutorial {
 		g.drawString("10", (int)(shiftx+scale*(15+shiftroomx+96*5)), (int)(shifty+scale*(66+96*4+shiftroomy)));
 		g.drawString("11", (int)(shiftx+scale*(17+shiftroomx+96*4)), (int)(shifty+scale*(66+96*4+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial35() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1495,7 +1446,7 @@ public class Tutorial {
 		g.setColor(Color.BLACK);
 		g.fillRect((int)(shiftx+scale*(96*(3-1)-17+shiftroomx)), (int)(shifty+scale*(96*3+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -1509,13 +1460,11 @@ public class Tutorial {
 		g.drawString("2", (int)(shiftx+scale*(32+shiftroomx+96*2)), (int)(shifty+scale*(66+96*4+shiftroomy)));
 		g.drawString("3", (int)(shiftx+scale*(32+shiftroomx+96*4)), (int)(shifty+scale*(67+96*3+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial36() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1533,7 +1482,7 @@ public class Tutorial {
 		g.drawString("all one has to do is go toward the most space while keeping in mind what map", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2700));
 		g.drawString("space is actually empty and what map space just looks empty.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3100));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -1548,13 +1497,11 @@ public class Tutorial {
 		g.drawString("10", (int)(shiftx+scale*(15+shiftroomx+96*6)), (int)(shifty+scale*(66+96*6+shiftroomy)));
 		g.drawString("11", (int)(shiftx+scale*(17+shiftroomx+96*5)), (int)(shifty+scale*(66+96*6+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial37() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1580,13 +1527,11 @@ public class Tutorial {
 			g.drawRect((int)(shiftx+scale*(shiftroomx+96*((int)(i/3))*3+4)), (int)(shifty+scale*(96*(i%3)*3+shiftroomy+4)), (int)(scale*(279)), (int)(scale*(279)));
 		}
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial38() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1604,7 +1549,7 @@ public class Tutorial {
 		g.drawString("on the right, being 4 rooms tall instead of 3 rooms wide. Let's take a look", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2700));
 		g.drawString("at what each split will cut us off from should it be pots.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3100));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*3+shiftroomy)));
@@ -1626,13 +1571,11 @@ public class Tutorial {
 		g.drawRect((int)(shiftx+scale*(shiftroomx+96*3+4)), (int)(shifty+scale*(96*0+4)), (int)(scale*(183)), (int)(scale*(279)));
 		g.drawRect((int)(shiftx+scale*(shiftroomx+96*3+4)), (int)(shifty+scale*(96*3+4)), (int)(scale*(183)), (int)(scale*(183)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial39() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1652,7 +1595,7 @@ public class Tutorial {
 		g.drawString("correct decision would", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3500));
 		g.drawString("therefore be down.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3900));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*3+shiftroomy)));
@@ -1680,13 +1623,11 @@ public class Tutorial {
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(66+96*5+shiftroomy)));
 		g.drawString("2", (int)(shiftx+scale*(32+shiftroomx+96*4)), (int)(shifty+scale*(66+96*6+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial40() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1704,7 +1645,7 @@ public class Tutorial {
 		g.drawString("the previous method does. Either way, I recommend practicing both to find", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2700));
 		g.drawString("what works for you.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3100));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*3+shiftroomy)));
@@ -1719,13 +1660,11 @@ public class Tutorial {
 		g.drawString("10", (int)(shiftx+scale*(15+shiftroomx+96*3)), (int)(shifty+scale*(66+96*6+shiftroomy)));
 		g.drawString("11", (int)(shiftx+scale*(17+shiftroomx+96*4)), (int)(shifty+scale*(66+96*6+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial41() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1745,13 +1684,11 @@ public class Tutorial {
 		g.drawString("are only interested in learning how to map read during fullskips, go ahead", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3900));
 		g.drawString("and skip past this section to chapter 5", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.4300));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial42() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1772,7 +1709,7 @@ public class Tutorial {
 		g.drawString("you are less cramped without", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3900));
 		g.drawString("a pot split next to main path.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.4300));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*2)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -1783,13 +1720,11 @@ public class Tutorial {
 		g.fillRect((int)(shiftx+scale*(96*(2+1)+48+shiftroomx)), (int)(shifty+scale*(96*3+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(125)));
 		g.fillRect((int)(shiftx+scale*(96*(2-1)-17+shiftroomx)), (int)(shifty+scale*(96*3+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial43() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1807,7 +1742,7 @@ public class Tutorial {
 		g.drawString("in favor of the right split. For this case we make our lives easier and instead", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2700));
 		g.drawString("of guessing we will go ahead and peek each room.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3100));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(66+96*5+shiftroomy)));
@@ -1824,13 +1759,11 @@ public class Tutorial {
 		//g.fillRect((int)(shiftx+scale*(96*y-17+shiftroomx)), (int)(shifty+scale*(96*(x+1)+48+shiftroomy)), (int)(scale*(130)), (int)(scale*(66)));
 		g.fillRect((int)(shiftx+scale*(96*(4+1)+48+shiftroomx)), (int)(shifty+scale*(96*4+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial44() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1848,7 +1781,7 @@ public class Tutorial {
 		g.drawString("In addition, the standard guess for the right pots split follows the red", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2700));
 		g.drawString("numbers as shown, and allows space for defender+MBC if up is main path.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3100));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(66+96*5+shiftroomy)));
@@ -1873,13 +1806,11 @@ public class Tutorial {
 		g.drawString("2", (int)(shiftx+scale*(32+shiftroomx+96*1)), (int)(shifty+scale*(66+96*4+shiftroomy)));
 		g.drawString("3", (int)(shiftx+scale*(32+shiftroomx+96*2)), (int)(shifty+scale*(67+96*4+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial45() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1897,7 +1828,7 @@ public class Tutorial {
 		g.drawString("decide to go up instead of right because there is less space for a last split", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2700));
 		g.drawString("if you go right than if you go up.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3100));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(66+96*5+shiftroomy)));
@@ -1914,13 +1845,11 @@ public class Tutorial {
 		
 		g.setColor(Color.BLACK);
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial46() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1940,13 +1869,11 @@ public class Tutorial {
 		g.drawString("If on the other hand you get a chance to use a more accurate method, you", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3500));
 		g.drawString("should use that method instead.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3900));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial47() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -1965,20 +1892,18 @@ public class Tutorial {
 		g.drawString("up split would spend too much time hugging middle, so down is the correct", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3100));
 		g.drawString("decision.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3500));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*4+shiftroomy)));
 		g.drawString("2", (int)(shiftx+scale*(32+shiftroomx+96*3)), (int)(shifty+scale*(66+96*5+shiftroomy)));
 		g.drawString("3", (int)(shiftx+scale*(32+shiftroomx+96*4)), (int)(shifty+scale*(67+96*5+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial48() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -2000,7 +1925,7 @@ public class Tutorial {
 		g.drawString("room 8 so it's late enough to", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.4300));
 		g.drawString("start going middle.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.4700));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -2015,13 +1940,11 @@ public class Tutorial {
 		g.drawString("7", (int)(shiftx+scale*(32+shiftroomx+96*7)), (int)(shifty+scale*(66+96*4+shiftroomy)));
 		g.drawString("8", (int)(shiftx+scale*(32+shiftroomx+96*7)), (int)(shifty+scale*(66+96*3+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial49() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -2042,7 +1965,7 @@ public class Tutorial {
 		g.drawString("implies that most decisions", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3900));
 		g.drawString("are made early on.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.4300));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*3)), (int)(shifty+scale*(66+96*2+shiftroomy)));
@@ -2057,13 +1980,11 @@ public class Tutorial {
 		g.drawString("10", (int)(shiftx+scale*(15+shiftroomx+96*4)), (int)(shifty+scale*(66+96*4+shiftroomy)));
 		g.drawString("11", (int)(shiftx+scale*(17+shiftroomx+96*5)), (int)(shifty+scale*(66+96*4+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial50() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -2084,13 +2005,11 @@ public class Tutorial {
 		g.drawString("find 1 or 2 good reasons to go in a particular direction, it's probably right", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.4300));
 		g.drawString("and there's no use overthinking all the other possibilities.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.4700));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial51() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -2107,14 +2026,12 @@ public class Tutorial {
 		g.drawString("start to finish. However, as I've stated before, everyone map reads differently,", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.2700));
 		g.drawString("so you should use what makes the most sense to you and not just follow what", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3100));
 		g.drawString("makes the most sense to me.", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3500));
-
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		
+		paintButtons();
 	}
 	
 	public static void paintTutorial52() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -2134,13 +2051,11 @@ public class Tutorial {
 		g.fillRect((int)(shiftx+scale*(96*(5+1)+48+shiftroomx)), (int)(shifty+scale*(96*4+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 		g.fillRect((int)(shiftx+scale*(96*(5-1)-17+shiftroomx)), (int)(shifty+scale*(96*4+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial53() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -2160,18 +2075,16 @@ public class Tutorial {
 		g.fillRect((int)(shiftx+scale*(96*5-17+shiftroomx)), (int)(shifty+scale*(96*(4-1)-17+shiftroomy)), (int)(scale*(130)), (int)(scale*(66)));
 		g.fillRect((int)(shiftx+scale*(96*(5+1)+48+shiftroomx)), (int)(shifty+scale*(96*4+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(66+96*4+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial54() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -2191,7 +2104,7 @@ public class Tutorial {
 		g.fillRect((int)(shiftx+scale*(96*5-17+shiftroomx)), (int)(shifty+scale*(96*(4-1)-17+shiftroomy)), (int)(scale*(130)), (int)(scale*(66)));
 		g.fillRect((int)(shiftx+scale*(96*(5+1)+48+shiftroomx)), (int)(shifty+scale*(96*4+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -2199,13 +2112,11 @@ public class Tutorial {
 		g.drawString("3", (int)(shiftx+scale*(32+shiftroomx+96*5)), (int)(shifty+scale*(67+96*5+shiftroomy)));
 		g.drawString("4", (int)(shiftx+scale*(30+shiftroomx+96*5)), (int)(shifty+scale*(67+96*6+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial55() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -2225,7 +2136,7 @@ public class Tutorial {
 		g.fillRect((int)(shiftx+scale*(96*5-17+shiftroomx)), (int)(shifty+scale*(96*(4-1)-17+shiftroomy)), (int)(scale*(130)), (int)(scale*(66)));
 		g.fillRect((int)(shiftx+scale*(96*(5+1)+48+shiftroomx)), (int)(shifty+scale*(96*4+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -2236,13 +2147,11 @@ public class Tutorial {
 		g.drawString("6", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(67+96*7+shiftroomy)));
 		g.drawString("7", (int)(shiftx+scale*(32+shiftroomx+96*3)), (int)(shifty+scale*(66+96*7+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial56() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -2262,7 +2171,7 @@ public class Tutorial {
 		g.fillRect((int)(shiftx+scale*(96*5-17+shiftroomx)), (int)(shifty+scale*(96*(4-1)-17+shiftroomy)), (int)(scale*(130)), (int)(scale*(66)));
 		g.fillRect((int)(shiftx+scale*(96*(5+1)+48+shiftroomx)), (int)(shifty+scale*(96*4+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -2274,13 +2183,11 @@ public class Tutorial {
 		g.drawString("7", (int)(shiftx+scale*(32+shiftroomx+96*3)), (int)(shifty+scale*(66+96*7+shiftroomy)));
 		g.drawString("8", (int)(shiftx+scale*(32+shiftroomx+96*2)), (int)(shifty+scale*(66+96*7+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial57() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -2300,7 +2207,7 @@ public class Tutorial {
 		g.fillRect((int)(shiftx+scale*(96*5-17+shiftroomx)), (int)(shifty+scale*(96*(4-1)-17+shiftroomy)), (int)(scale*(130)), (int)(scale*(66)));
 		g.fillRect((int)(shiftx+scale*(96*(5+1)+48+shiftroomx)), (int)(shifty+scale*(96*4+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -2314,13 +2221,11 @@ public class Tutorial {
 		g.drawString("8", (int)(shiftx+scale*(32+shiftroomx+96*2)), (int)(shifty+scale*(66+96*6+shiftroomy)));
 		g.drawString("8", (int)(shiftx+scale*(32+shiftroomx+96*1)), (int)(shifty+scale*(66+96*6+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial58() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -2340,7 +2245,7 @@ public class Tutorial {
 		g.fillRect((int)(shiftx+scale*(96*5-17+shiftroomx)), (int)(shifty+scale*(96*(4-1)-17+shiftroomy)), (int)(scale*(130)), (int)(scale*(66)));
 		g.fillRect((int)(shiftx+scale*(96*(5+1)+48+shiftroomx)), (int)(shifty+scale*(96*4+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -2356,13 +2261,11 @@ public class Tutorial {
 		g.drawString("9", (int)(shiftx+scale*(32+shiftroomx+96*1)), (int)(shifty+scale*(66+96*5+shiftroomy)));
 		g.drawString("10", (int)(shiftx+scale*(15+shiftroomx+96*1)), (int)(shifty+scale*(66+96*4+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial59() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -2387,7 +2290,7 @@ public class Tutorial {
 		g.fillRect((int)(shiftx+scale*(96*5-17+shiftroomx)), (int)(shifty+scale*(96*(4-1)-17+shiftroomy)), (int)(scale*(130)), (int)(scale*(66)));
 		g.fillRect((int)(shiftx+scale*(96*(5+1)+48+shiftroomx)), (int)(shifty+scale*(96*4+shiftroomy-17)), (int)(scale*(66)), (int)(scale*(130)));
 		
-		f = new Font("SansSerif", Font.BOLD, 32);
+		f = new Font("SansSerif", Font.BOLD, (int)(56*scale));
 		g.setFont(f);
 		g.setColor(Color.GREEN);
 		g.drawString("1", (int)(shiftx+scale*(30+shiftroomx+96*4)), (int)(shifty+scale*(66+96*4+shiftroomy)));
@@ -2404,13 +2307,11 @@ public class Tutorial {
 		g.drawString("10", (int)(shiftx+scale*(15+shiftroomx+96*1)), (int)(shifty+scale*(66+96*4+shiftroomy)));
 		g.drawString("11", (int)(shiftx+scale*(17+shiftroomx+96*2)), (int)(shifty+scale*(66+96*4+shiftroomy)));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorial60() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -2432,12 +2333,11 @@ public class Tutorial {
 		g.drawString("tutorial, or you have a suggestion for something to add to the program, please", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.4700));
 		g.drawString("tell me! Otherwise, good luck with your practice!", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.5100));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorialEnd() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -2445,12 +2345,11 @@ public class Tutorial {
 		g.setFont(f);
 		g.drawString("That's it so far!", (int)(frame.getWidth()*.5-250), (int)(frame.getHeight()*.460));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
+		paintButtons();
 	}
 	
 	public static void paintTutorialn() {
-		Graphics g = c1.getGraphics();
+		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0,0,frame.getWidth(),frame.getHeight());
 		g.setColor(Color.WHITE);
@@ -2471,8 +2370,8 @@ public class Tutorial {
 		g.drawString("", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.3900));
 		g.drawString("", (int)(frame.getWidth()/2-450), (int)(frame.getHeight()*.4300));
 		
-		new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", c1, mouse1);
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", c1, mouse1);
-		new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", c1, mouse1);
+		paintButtons();
 	}
 }
+
+//Created by Nacnudd from the Pub Halls Discord server.
