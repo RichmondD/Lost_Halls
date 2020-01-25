@@ -31,12 +31,13 @@ public class Paint{
 	public static Maps map;
 	private static Keyboard key;
 	private static Room[][] m = new Room[9][9];
-	private static boolean[][] seen, selected;
+	private static boolean[][] seen;
+	private static int[][] selected;
 	public static int[] pos = {0,0};
-	public static int tutor;
+	public static int tutor, highlightSetting;
 	public static int potsHit, defendersHit;
 	private static JFrame frame;
-	public static boolean imported, showSpawn, showHits, peekSpawn, selectEnabled, highlightSetting;
+	public static boolean imported, showSpawn, showHits, peekSpawn, selectEnabled, markTroom;
 	private static int shiftx, shifty, shiftroomx, shiftroomy, historyPosition;
 	private static double scale;
 	private static List<boolean[][]> history = new ArrayList<boolean[][]>();
@@ -71,6 +72,7 @@ public class Paint{
 		showHits = true;
 		peekSpawn = true;
 		selectEnabled = true;
+		markTroom = true;
 		
 		frame.addComponentListener( new ComponentAdapter() {
             public void componentResized( ComponentEvent e ) {
@@ -174,6 +176,13 @@ public class Paint{
 		else {
 			new Button(13, (int)(frame.getWidth()/2+(int)(260*scale)), (int)(frame.getHeight()*.4500-33), 90, 50, Color.GRAY, "Off", i, mouse1);
 		}
+		g.drawString("Show troom after hitting pots:", (int)(frame.getWidth()/2-(int)(400*scale)), (int)(frame.getHeight()*.5500));
+		if(markTroom) {
+			new Button(14, (int)(frame.getWidth()/2+(int)(270*scale)), (int)(frame.getHeight()*.5500-33), 80, 50, Color.GRAY, "On", i, mouse1);
+		}
+		else {
+			new Button(14, (int)(frame.getWidth()/2+(int)(260*scale)), (int)(frame.getHeight()*.5500-33), 90, 50, Color.GRAY, "Off", i, mouse1);
+		}
 		Font f2 = new Font("SansSerif", Font.BOLD, (int)(24*scale));
 		g.setFont(f2);
 		g.drawString("Basic Controls are arrow keys to move and backspace to undo", (int)(frame.getWidth()/2-(int)(365*scale)), (int)(frame.getHeight()*.7800));
@@ -211,6 +220,7 @@ public class Paint{
 		update();
 	}
 	
+	
 	public static void startGame(boolean loaded) {
 		imported = loaded;
 		current = CurrentFrame.MAP;
@@ -227,7 +237,7 @@ public class Paint{
 		history.clear();
 		posHistory.clear();
 		seen = new boolean[9][9];
-		selected = new boolean[9][9];
+		selected = new int[9][9];
 		
 		new Button(3, (int)(frame.getWidth()*.25-118), (int)(frame.getHeight()-115), 236, 50, Color.GRAY, "Back to home", i, mouse1);
 		
@@ -266,6 +276,7 @@ public class Paint{
 		posHistory.add(pos.clone());
 		
 		paintRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
+		repaintDelay();
 		update();
 	}
 	
@@ -302,6 +313,16 @@ public class Paint{
 		g.fillRect((int)(shiftx+scale*(16+shiftroomx+96*x)), (int)(shifty+scale*(16+96*y+shiftroomy)), (int)(scale*(64)), (int)(scale*(64)));
 		if(n.pot) {
 			g.drawImage(Ipot, (int)(shiftx+scale*(17+shiftroomx+96*x)), (int)(shifty+scale*(17+96*y+shiftroomy)), (int)(shiftx+scale*(79+shiftroomx+96*x)), (int)(shifty+scale*(79+96*y+shiftroomy)), 0, 0, 64, 64, null);
+			if(!n.seen) {
+				potsHit++;
+				if(showHits) {
+					paintHits();
+				}
+				n.seen = true;
+			}
+		}
+		if(n.troom) {
+			g.drawImage(Itroom, (int)(shiftx+scale*(19+shiftroomx+96*x)), (int)(shifty+scale*(15+96*y+shiftroomy)), (int)(shiftx+scale*(81+shiftroomx+96*x)), (int)(shifty+scale*(77+96*y+shiftroomy)), 0, 0, 128, 128, null);
 			if(!n.seen) {
 				potsHit++;
 				if(showHits) {
@@ -433,6 +454,9 @@ public class Paint{
 		if(n.pot) {
 			g.drawImage(Ipot, (int)(shiftx+scale*(17+shiftroomx+96*x)), (int)(shifty+scale*(17+shiftroomy+96*y)), (int)(shiftx+scale*(79+shiftroomx+96*x)), (int)(shifty+scale*(79+shiftroomy+96*y)), 0, 0, 64, 64, null);
 		}
+		if(n.troom) {
+			g.drawImage(Itroom, (int)(shiftx+scale*(19+shiftroomx+96*x)), (int)(shifty+scale*(15+96*y+shiftroomy)), (int)(shiftx+scale*(81+shiftroomx+96*x)), (int)(shifty+scale*(77+96*y+shiftroomy)), 0, 0, 128, 128, null);
+		}
 		if(n.defender) {
 			g.drawImage(Idef, (int)(shiftx+scale*(17+shiftroomx+96*x)), (int)(shifty+scale*(17+shiftroomy+96*y)), (int)(shiftx+scale*(79+shiftroomx+96*x)), (int)(shifty+scale*(79+shiftroomy+96*y)), 0, 0, 131, 131, null);
 		}
@@ -446,7 +470,6 @@ public class Paint{
 	
 	public static void moveUp() {
 		if(m[pos[0]][pos[1]].up) {
-			cleanRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
 			pos[0]--;
 			paintRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
 			boolean[][] z = new boolean[9][9];
@@ -459,13 +482,13 @@ public class Paint{
 			posHistory.add(pos.clone());
 			historyPosition++;
 			//System.out.println("Up");
+			rePaint();
 			update();
 		}
 	}
 	
 	public static void moveDown() {
 		if(m[pos[0]][pos[1]].down) {
-			cleanRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
 			pos[0]++;
 			paintRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
 			boolean[][] z = new boolean[9][9];
@@ -478,13 +501,13 @@ public class Paint{
 			posHistory.add(pos.clone());
 			historyPosition++;
 			//System.out.println("Down");
+			rePaint();
 			update();
 		}
 	}
 	
 	public static void moveRight() {
 		if(m[pos[0]][pos[1]].right) {
-			cleanRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
 			pos[1]++;
 			paintRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
 			boolean[][] z = new boolean[9][9];
@@ -497,13 +520,13 @@ public class Paint{
 			posHistory.add(pos.clone());
 			historyPosition++;
 			//System.out.println("Right");
+			rePaint();
 			update();
 		}
 	}
 	
 	public static void moveLeft() {
 		if(m[pos[0]][pos[1]].left) {
-			cleanRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
 			pos[1]--;
 			paintRoom(pos[0], pos[1], m[pos[0]][pos[1]]);
 			boolean[][] z = new boolean[9][9];
@@ -516,6 +539,7 @@ public class Paint{
 			posHistory.add(pos.clone());
 			historyPosition++;
 			//System.out.println("Left");
+			rePaint();
 			update();
 		}
 	}
@@ -538,23 +562,25 @@ public class Paint{
 		}
 	}
 	
-	public static void paintHighlights(int x, int y) {
+	public static void paintHighlights(int x, int y, int b) {
 		if(x > shiftx && y > shifty && x < (shiftx+scale*96*9) && y < (shifty+scale*96*9)) {
 			int xcor = (int)(((x-shiftx)/scale-shiftroomx)/96);
 			int ycor = (int)(((y-shifty)/scale-shiftroomy)/96);
-			selected[xcor][ycor] = !selected[xcor][ycor];
+			if(selected[xcor][ycor] != 0 ) {selected[xcor][ycor] = 0;}
+			else if(b > 2048) {selected[xcor][ycor] = 2;}
+			else {selected[xcor][ycor] = 1;}
 			highlightSetting = selected[xcor][ycor];
 			repaintMap();
 			update();
 		}
 	}
 	
-	public static void checkIfHighlight(int x, int y) {
+	public static void checkIfHighlight(int x, int y, int b) {
 		if(x > shiftx && y > shifty && x < (shiftx+scale*96*9) && y < (shifty+scale*96*9)) {
 			int xcor = (int)(((x-shiftx)/scale-shiftroomx)/96);
 			int ycor = (int)(((y-shifty)/scale-shiftroomy)/96);
 			if(selected[xcor][ycor] != highlightSetting) {
-				paintHighlights(x, y);
+				paintHighlights(x, y, b);
 			}
 		}
 	}
@@ -573,7 +599,7 @@ public class Paint{
 		g.drawString("Maps: Rushers of pub halls runs, RL's from all discords, several other sources.", 50,(int)(frame.getHeight()*.4));
 		g.drawString("Rushers with Significant Contributions: TreePuns, Beregue, Drunkdevil, Evilfan,", 50,(int)(frame.getHeight()*.5));
 		g.drawString("Maldir, Semicar, xRomeWolvx, Frus", 100, (int)(frame.getHeight()*.54));
-		g.drawString("Assistance Encrypting Maps: FoxLoli, Xbyxbd", 50, (int)(frame.getHeight()*.64));
+		g.drawString("Assistance Encrypting Maps: FoxLoli, ChardosA", 50, (int)(frame.getHeight()*.64));
 		
 		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", i, mouse1);
 		update();
@@ -584,6 +610,7 @@ public class Paint{
 		t.setRepeats(false);
 		t.start();
 	}
+	
 	
 	public static void rePaint() {
 		scale = ((float)frame.getHeight()/1040);
@@ -616,6 +643,7 @@ public class Paint{
 		update();
 	}
 	
+	
 	public static void repaintMap() {
 		Graphics g = i.getGraphics();
 		g.setColor(Color.BLACK);
@@ -627,18 +655,40 @@ public class Paint{
 		g.setColor(Color.YELLOW); //Color.getHSBColor((float)(0),(float)(0),(float)(.4))
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
-			if (selected[i][j] && !m[j][i].border) {
+				if (selected[i][j] != 0 && !m[j][i].border) {
+					if(selected[i][j] == 2) {g.setColor(Color.ORANGE);}
+					else {g.setColor(Color.CYAN);}
 					g.drawRect((int)(shiftx+3+scale*(96*i+shiftroomx)), (int)(shifty+3+scale*(96*j+shiftroomy)), (int)(scale*(90)), (int)(scale*(90)));
 					g.drawRect((int)(shiftx+4+scale*(96*i+shiftroomx)), (int)(shifty+4+scale*(96*j+shiftroomy)), (int)(scale*(88)), (int)(scale*(88)));
 				}
 			}
 		}
+		boolean potsVisible = false;
+		boolean troomVisible = false;
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				if (seen[i][j]) {
 					paintRoom(i, j, m[i][j]);
 					if(m[i][j].start) {
 						paintSpawnPeeks(i,j);
+					}
+					if(m[i][j].pot) {
+						potsVisible = true;
+					}
+					if(m[i][j].troom) {
+						troomVisible = true;
+					}
+				}
+			}
+		}
+		Font f = new Font("SansSerif", Font.BOLD, ((int)(56*scale)));
+		g.setFont(f);
+		g.setColor(Color.PINK);
+		if(potsVisible && (!troomVisible) && markTroom) {
+			for (int i = 0; i < 9; i++) {
+				for (int j = 0; j < 9; j++) {
+					if(m[i][j].troom) {
+						g.fillOval((int)(shiftx+scale*(41+shiftroomx+96*j)), (int)(shifty+scale*(41+96*i+shiftroomy)), (int)(scale*(14)), (int)(scale*(14)));
 					}
 				}
 			}

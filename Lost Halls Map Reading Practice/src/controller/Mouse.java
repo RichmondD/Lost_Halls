@@ -11,7 +11,7 @@ import view.Paint;
 
 public class Mouse implements MouseListener, MouseMotionListener {
 	
-	private int len = 13;
+	private int len = 14;
 	private int[][] xy = new int[len][4];
 	public boolean[] b = new boolean[len];
 	
@@ -34,7 +34,7 @@ public class Mouse implements MouseListener, MouseMotionListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if(Paint.current == Paint.CurrentFrame.MAP && Paint.selectEnabled) {
-			Paint.paintHighlights(e.getX(), e.getY());
+			Paint.paintHighlights(e.getX(), e.getY(), e.getModifiersEx());
 		}
 		if(e.getX() > xy[0][0] && e.getX() < xy[0][1] && e.getY() > xy[0][2] && e.getY() < xy[0][3] && b[0]) {
 			//System.out.println("1");
@@ -116,10 +116,17 @@ public class Mouse implements MouseListener, MouseMotionListener {
 			b = new boolean[len];
 			Paint.peekSpawn = !Paint.peekSpawn;
 			Paint.rePaint();
-		}else if(e.getX() > xy[12][0] && e.getX() < xy[12][1] && e.getY() > xy[12][2] && e.getY() < xy[12][3] && b[12]) {
+		}
+		else if(e.getX() > xy[12][0] && e.getX() < xy[12][1] && e.getY() > xy[12][2] && e.getY() < xy[12][3] && b[12]) {
 			//System.out.println("1");
 			b = new boolean[len];
 			Paint.selectEnabled = !Paint.selectEnabled;
+			Paint.rePaint();
+		}
+		else if(e.getX() > xy[13][0] && e.getX() < xy[13][1] && e.getY() > xy[13][2] && e.getY() < xy[13][3] && b[13]) {
+			//System.out.println("1");
+			b = new boolean[len];
+			Paint.markTroom = !Paint.markTroom;
 			Paint.rePaint();
 		}
 	}
@@ -142,7 +149,7 @@ public class Mouse implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		Paint.checkIfHighlight(e.getX(), e.getY());
+		Paint.checkIfHighlight(e.getX(), e.getY(), e.getModifiersEx());
 	}
 
 	@Override

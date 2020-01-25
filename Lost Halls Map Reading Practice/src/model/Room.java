@@ -8,6 +8,7 @@ public class Room {
 	public boolean pot;
 	public boolean defender;
 	public boolean start;
+	public boolean troom;
 	public boolean border;
 	public boolean seen;
 	public int x, y;
