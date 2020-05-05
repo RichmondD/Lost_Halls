@@ -23,7 +23,7 @@ public class Maps {
 	private int[][][] t;
 	private int[][] m, mainpath;
 	private int mainlength = 10;
-	private boolean mainloop, potloop, troom, forceloop;
+	private boolean mainloop, potloop, forceloop;
 	
 	public Maps() throws IOException {
 		r = new Random();
@@ -170,7 +170,6 @@ public class Maps {
 		mainpath = new int[9][9];
 		mainloop = false;
 		potloop = false;
-		troom = false;
 		m[4][4] = 420;
 		
 		createNextRoom(4, 4, 0, 0, mainlength, false);
@@ -182,50 +181,54 @@ public class Maps {
 	}
 	
 	private void createPots() {
+		while(!createNewPot(4, 4, 0, true)) {
+			
+		}
 		int potsplaced = 0;
 		boolean potspaceavailable = true;
 		int tries = 0;
 		while(potspaceavailable && potsplaced < 5) {
-			if(createNewPot(4, 4, 0)) { potsplaced ++;}
+			if(createNewPot(4, 4, 0, false)) { potsplaced ++;}
 			if(tries > 30) {
-				if(createNewPot(4, 4, 4)) { potsplaced ++;}
-				else if(createNewPot(4, 4, 3)) { potsplaced ++;}
-				else if(createNewPot(4, 4, 2)) { potsplaced ++;}
+				if(createNewPot(4, 4, 4, false)) { potsplaced ++;}
+				else if(createNewPot(4, 4, 3, false)) { potsplaced ++;}
+				else if(createNewPot(4, 4, 2, false)) { potsplaced ++;}
 				else {potspaceavailable = false;}
 			}
 			tries ++;
 		}
 	}
 	
-	private boolean createNewPot(int x, int y, int forcepots) {
+	private boolean createNewPot(int x, int y, int forcepots, boolean troom) {
 		boolean works;
 		if((r.nextFloat() < 1.0/mainlength) || (forcepots > 0)) {
-			if(forcepots > 0) { works = createNextRoom(x, y, 2, 0, r.nextInt(forcepots-1)+2, false);}
+			if(troom) { works = createNextRoom(x, y, 1, 0, r.nextInt(3)+2, false);}
+			else if(forcepots > 0) { works = createNextRoom(x, y, 2, 0, r.nextInt(forcepots-1)+2, false);}
 			else { works = createNextRoom(x, y, 2, 0, r.nextInt(3)+2, false);}
 			if(works) { return true;}
 		}
 		
 		if(m[y][x]%2 == 1) {
 	        if(mainpath[y-1][x] == mainpath[y][x]+1) {
-	            works = createNewPot(x, y-1, forcepots);
+	            works = createNewPot(x, y-1, forcepots, troom);
 	            if(works) { return true;}
 	        }
 		}
 		if(m[y][x]%3 == 1) {
 	        if(mainpath[y][x+1] == mainpath[y][x]+1) {
-	            works = createNewPot(x+1, y, forcepots);
+	            works = createNewPot(x+1, y, forcepots, troom);
 	            if(works) { return true;}
 	        }
 		}
 		if(m[y][x]%5 == 1) {
 	        if(mainpath[y+1][x] == mainpath[y][x]+1) {
-	            works = createNewPot(x, y+1, forcepots);
+	            works = createNewPot(x, y+1, forcepots, troom);
 	            if(works) { return true;}
 	        }
 		}
 		if(m[y][x]%7 == 1) {
 	        if(mainpath[y][x-1] == mainpath[y][x]+1) {
-	            works = createNewPot(x-1, y, forcepots);
+	            works = createNewPot(x-1, y, forcepots, troom);
 	            if(works) { return true;}
 	        }
 		}
@@ -236,7 +239,7 @@ public class Maps {
 	private boolean createNextRoom(int x, int y, int pathtype, int depth, int length, boolean isloop) {
 		//System.out.println(x+","+y+"  "+depth);
 		if(depth == length) {
-			if(pathtype == 0 && troom) {
+			if(pathtype == 0) {
 				boolean test = placeMBC(x, y);
 				return test;
 			}
@@ -261,11 +264,20 @@ public class Maps {
 		boolean works;
 		if(isloop) {
 			available = new boolean[]{true, true, true, true};
+			int count = 0;
 			while(available[0] || available[1] || available[2] || available[3]) {
 				options = new ArrayList<>();
 				for(int i = 0; i < 4; i++) {
-					if(available[i]) { options.add(i);}
+					if(available[i]) { 
+						count = ((y+((int) (i/2)) > 0 && (m[y+((int) (i/2))-1][x+i%2] == 0)) ? 1:0) + ((y+((int) (i/2)) < 8 && (m[y+((int) (i/2))+1][x+i%2] == 0)) ? 1:0) + ((x+i%2 > 0 && (m[y+((int) (i/2))][x+i%2-1] == 0)) ? 1:0) + ((x+i%2 < 8 && (m[y+((int) (i/2))][x+i%2+1] == 0)) ? 1:0);
+						//System.out.println(i+","+count);
+						while(count > 0) {
+							options.add(i);
+							count--;
+						}
+					}
 				}
+				if(options.size() < 1) { break;}
 				pick = options.get(r.nextInt(options.size()));
 				
 				if(pick == 0) {
@@ -290,26 +302,6 @@ public class Maps {
 				}
 			}
 			return false;
-		}
-		
-		if(pathtype == 0 && (!troom) && (r.nextFloat() < 2.0/mainlength)) {
-			if(createNextRoom(x, y, 1, 0, r.nextInt(3)+2, false)) { troom = true;}
-			works = false;
-			if(troom) { works = createNextRoom(x, y, 0, depth, length, false);}
-			if(works) {
-				for (int i = 0; i < 9; i++) {
-					for(int j = 0; j < 9; j++) {
-						if(m[i][j] == 126) { markTroomSplit(j, i, x, y, 0, 6);}
-					}
-				}
-				return true;
-			}
-			for (int i = 0; i < 9; i++) {
-				for(int j = 0; j < 9; j++) {
-					if(m[i][j] == 126) { removeTroom(j, i, x, y);}
-				}
-			}
-			troom = false;
 		}
 		
 		if(((((!mainloop) && pathtype == 0) || ((!potloop) && (pathtype > 0) && (depth < length-1))) && (r.nextFloat() <= 1.0/mainlength)) || (forceloop && (!mainloop))) {
@@ -528,52 +520,6 @@ public class Maps {
 	    }
 	    
 	    return;
-	}
-	
-	private void removeTroom(int x, int y, int xend, int yend) {
-		if(x == xend && y == yend) { return;}
-		while(m[y][x] >250) { m[y][x] -= 210;}
-		
-		if(m[y][x]%2 == 1) {
-	        changeRoom(x, y, 0);
-	        changeRoom(x, y-1, 2);
-	        removeTroom(x, y-1, xend, yend);
-		}
-		if(m[y][x]%3 == 1) {
-	        changeRoom(x, y, 1);
-	        changeRoom(x+1, y, 3);
-	        removeTroom(x+1, y, xend, yend);
-		}
-	    if(m[y][x]%5 == 1) {
-	        changeRoom(x, y, 2);
-	        changeRoom(x, y+1, 0);
-	        removeTroom(x, y+1, xend, yend);
-	    }
-	    if(m[y][x]%7 == 1) {
-	        changeRoom(x, y, 3);
-	        changeRoom(x-1, y, 1);
-	        removeTroom(x-1, y, xend, yend);
-	    }
-	    return;
-	}
-	
-	private boolean markTroomSplit(int x, int y, int xend, int yend, int depth, int length) {
-		if(depth > length) { return false;}
-		if(x == xend && y == yend) { return true;}
-		
-		if(m[y][x]%2 == 1) {
-	        if(markTroomSplit(x, y-1, xend, yend, depth+1, length)) { m[y][x] += 1050;}
-		}
-		if(m[y][x]%3 == 1) {
-	        if(markTroomSplit(x+1, y, xend, yend, depth+1, length)) { m[y][x] += 1050;}
-		}
-		if(m[y][x]%5 == 1) {
-	        if(markTroomSplit(x, y+1, xend, yend, depth+1, length)) { m[y][x] += 1050;}
-		}
-		if(m[y][x]%7 == 1) {
-	        if(markTroomSplit(x-1, y, xend, yend, depth+1, length)) { m[y][x] += 1050;}
-		}
-		return false;
 	}
 	
 	private boolean placeMBC(int x, int y) {
