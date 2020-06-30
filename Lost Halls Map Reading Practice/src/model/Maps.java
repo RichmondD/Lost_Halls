@@ -1,7 +1,9 @@
 package model;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -125,6 +127,23 @@ public class Maps {
 			}
 		}
 		return retMap;
+	}
+	
+	public void saveMap() throws IOException {
+		FileWriter f = new FileWriter("SavedMaps.txt", true);
+		BufferedWriter bw = new BufferedWriter(f);
+		
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 8; j++) {
+				bw.write(m[i][j]+",");
+			}
+			bw.write(m[i][8]+"");
+			bw.newLine();
+		}
+		bw.newLine();
+		bw.newLine();
+		
+		bw.close();
 	}
 	
 	private Room convertRoom(int num, int i, int j) {

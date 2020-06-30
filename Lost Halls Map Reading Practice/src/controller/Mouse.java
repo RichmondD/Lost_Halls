@@ -11,7 +11,7 @@ import view.Paint;
 
 public class Mouse implements MouseListener, MouseMotionListener {
 	
-	private int len = 14;
+	private int len = 16;
 	private int[][] xy = new int[len][4];
 	public boolean[] b = new boolean[len];
 	
@@ -127,6 +127,18 @@ public class Mouse implements MouseListener, MouseMotionListener {
 			//System.out.println("1");
 			b = new boolean[len];
 			Paint.markTroom = !Paint.markTroom;
+			Paint.rePaint();
+		}
+		else if(e.getX() > xy[14][0] && e.getX() < xy[14][1] && e.getY() > xy[14][2] && e.getY() < xy[14][3] && b[14]) {
+			//System.out.println("1");
+			b = new boolean[len];
+			Paint.revealMap();
+			Paint.rePaint();
+		}
+		else if(e.getX() > xy[15][0] && e.getX() < xy[15][1] && e.getY() > xy[15][2] && e.getY() < xy[15][3] && b[15]) {
+			//System.out.println("1");
+			b = new boolean[len];
+			Paint.saveMap();
 			Paint.rePaint();
 		}
 	}

@@ -105,10 +105,12 @@ public class Tutorial {
 		}
 	
 	public static void paintButtons() {
+		Graphics g = i.getGraphics();
 		if(Paint.tutor != 1) {
 			new Button(7,(int)(frame.getWidth()*.25-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Back", i, mouse1);
 		}
-		new Button(3,(int)(frame.getWidth()*.5-118),(int)(frame.getHeight()-115),236,50,Color.GRAY,"Back to home", i, mouse1);
+		new Button(3, (int)(frame.getWidth()/2-25), (int)(frame.getHeight()-115), 50, 50, Color.GRAY, "", i, mouse1);
+		g.drawImage(Paint.Ihome,  (int)(frame.getWidth()/2-25), (int)(frame.getHeight()-115+2), (int)(frame.getWidth()/2+25), (int)(frame.getHeight()-115+52), 0,0,360,360, null);
 		if(Paint.tutor != 60) {
 			new Button(6,(int)(frame.getWidth()*.75-55),(int)(frame.getHeight()-115),110,50,Color.GRAY,"Next", i, mouse1);
 		}
