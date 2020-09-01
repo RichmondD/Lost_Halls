@@ -29,6 +29,9 @@ public class Keyboard implements KeyListener {
 			Paint.undo();
 			//System.out.println("undo");
 		}
+		else if(k.getKeyCode() == KeyEvent.VK_R) {
+			Paint.startGame(false);	
+		}
 	}
 
 	@Override
