@@ -136,9 +136,9 @@ public class Tutorial {
 		g.drawString("Chapter 5: Rules of Thumb", (int)(frame.getWidth()/2-340), (int)(frame.getHeight()*.530));
 		g.drawString("Chapter 6: Putting it All Together", (int)(frame.getWidth()/2-340), (int)(frame.getHeight()*.5800));
 		g.setColor(Color.RED);
-		g.drawString("The tutorial is out of date! Most of the information is still", (int)(frame.getWidth()/2-400), (int)(frame.getHeight()*.6900));
-		g.drawString("correct, but main path is 9 rooms long not 11! Please keep", (int)(frame.getWidth()/2-417), (int)(frame.getHeight()*.7600));
-		g.drawString("in mind while reading! Hopefully update will be out soon!", (int)(frame.getWidth()/2-405), (int)(frame.getHeight()*.8300));
+		g.drawString("The tutorial is out of date! Most of the information is not", (int)(frame.getWidth()/2-400), (int)(frame.getHeight()*.6900));
+		g.drawString("correct, so please join the Lost Halls Classroom Discord", (int)(frame.getWidth()/2-417), (int)(frame.getHeight()*.7600));
+		g.drawString("for the time being if you want to learn map reading.", (int)(frame.getWidth()/2-405), (int)(frame.getHeight()*.8300));
 		
 		paintButtons();
 	}

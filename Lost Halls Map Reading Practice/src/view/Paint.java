@@ -696,7 +696,7 @@ public class Paint{
 				}
 			}
 		}
-		boolean potsVisible = false;
+		int potsVisible = 0;
 		boolean troomVisible = false;
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -706,7 +706,7 @@ public class Paint{
 						paintSpawnPeeks(i,j);
 					}
 					if(m[i][j].pot) {
-						potsVisible = true;
+						potsVisible++;
 					}
 					if(m[i][j].troom) {
 						troomVisible = true;
@@ -718,7 +718,7 @@ public class Paint{
 		Font f = new Font("SansSerif", Font.BOLD, ((int)(56*scale)));
 		g.setFont(f);
 		g.setColor(Color.PINK);
-		if(potsVisible && (!troomVisible) && markTroom) {
+		if((potsVisible > 0 && potsVisible < 3) && (!troomVisible) && markTroom) {
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 9; j++) {
 					if(m[i][j].troom) {

@@ -25,7 +25,7 @@ public class Maps {
 	private int[][][] t;
 	private int[][] m, mainpath;
 	private int mainlength = 10;
-	private boolean mainloop, potloop, forceloop;
+	private boolean mainloop, forceloop;
 	
 	public Maps() throws IOException {
 		r = new Random();
@@ -188,7 +188,6 @@ public class Maps {
 		m = new int[9][9];
 		mainpath = new int[9][9];
 		mainloop = false;
-		potloop = false;
 		m[4][4] = 420;
 		
 		createNextRoom(4, 4, 0, 0, mainlength, false);
@@ -208,9 +207,8 @@ public class Maps {
 		int tries = 0;
 		while(potspaceavailable && potsplaced < 5) {
 			if(createNewPot(4, 4, 0, false)) { potsplaced ++;}
-			if(tries > 30) {
-				if(createNewPot(4, 4, 4, false)) { potsplaced ++;}
-				else if(createNewPot(4, 4, 3, false)) { potsplaced ++;}
+			if(tries > 30 && potsplaced < 5) {
+				if(createNewPot(4, 4, 3, false)) { potsplaced ++;}
 				else if(createNewPot(4, 4, 2, false)) { potsplaced ++;}
 				else {potspaceavailable = false;}
 			}
@@ -221,9 +219,9 @@ public class Maps {
 	private boolean createNewPot(int x, int y, int forcepots, boolean troom) {
 		boolean works;
 		if((r.nextFloat() < 1.0/mainlength) || (forcepots > 0)) {
-			if(troom) { works = createNextRoom(x, y, 1, 0, r.nextInt(3)+2, false);}
+			if(troom) { works = createNextRoom(x, y, 1, 0, r.nextInt(2)+2, false);}
 			else if(forcepots > 0) { works = createNextRoom(x, y, 2, 0, r.nextInt(forcepots-1)+2, false);}
-			else { works = createNextRoom(x, y, 2, 0, r.nextInt(3)+2, false);}
+			else { works = createNextRoom(x, y, 2, 0, r.nextInt(2)+2, false);}
 			if(works) { return true;}
 		}
 		
@@ -323,9 +321,8 @@ public class Maps {
 			return false;
 		}
 		
-		if(((((!mainloop) && pathtype == 0) || ((!potloop) && (pathtype > 0) && (depth < length-1))) && (r.nextFloat() <= 1.0/mainlength)) || (forceloop && (!mainloop))) {
-			if(pathtype == 0) { mainloop = true;}
-			if(pathtype > 0) { potloop = true;}
+		if((((!mainloop) && pathtype == 0) && (r.nextFloat() <= 1.0/mainlength)) || (forceloop && (!mainloop))) {
+			mainloop = true;
 			available = loopSpace(x, y);
 			
 			while(available[0] || available[1] || available[2] || available[3] || available[4] || available[5] || available[6] || available[7]) {
@@ -440,8 +437,7 @@ public class Maps {
 	                else { return true;}
 	            }
 			}
-			if(pathtype == 0) { mainloop = false;}
-			if(pathtype > 0) { potloop = false;}
+			mainloop = false;
 			if(forceloop) { return false;}
 		}
 		
